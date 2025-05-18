@@ -9,7 +9,8 @@ A location-based app for forming and finding study groups nearby for similar cou
 
 Installation Instructions (for developers, to be removed)
 - For React Native, install Node.js and npm (from https://nodejs.org/)
-- We'll be using Expo (standard framework for React Native), run "npm install expo"
+- Clone github directory and cd into it (and then the frontend)
+- We'll be using Expo (standard framework for React Native), run "npm install" inside the frontend folder
 - Next, for basic testing you can use Expo Go but for building/later on, download Xcode/Android emulator
 
 - Download Expo Go on your iOS/Android device, make an account, and run "npm run start" in terminal
