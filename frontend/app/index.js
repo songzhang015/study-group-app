@@ -9,7 +9,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text>Hello, World!</Text>
+      <Text>Edit app/index.js to edit this screen.</Text>
+      <Text>All edits should appear realtime as you save/edit.</Text>
     </View>
   );
 }
