@@ -1,0 +1,22 @@
+"""
+Basic "Hello, World!" Flask Backend
+
+Run using "python app.py" while in backend directory
+
+Access using:
+http://localhost:5000/
+
+Used for storing data between app and MongoDB
+Currently not connected to mobile app
+"""
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return "Hello, World!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
