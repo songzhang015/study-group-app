@@ -30,6 +30,8 @@ Backend:
 - Activate it using "source venv/bin/activate" for Mac, something like "venv\Scripts\activate" for Windows?
 - Once activated, run "pip install -r requirements.txt"
 - You can leave your virtual environment using "deactivate", and re-enter it using the above activation command
+- Virtual environments help isolate project dependencies for your specific system, use it whenever you are adding new modules
+- Add requirements by using "pip freeze > requirements.txt"
 
 Installation Instructions (user):
 TBD
