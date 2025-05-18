@@ -6,3 +6,12 @@ A location-based app for forming and finding study groups nearby for similar cou
 - Kaleo Montero
 - Sawyer Christensen
 - Song Zhang
+
+Installation Instructions (for developers, to be removed)
+- For React Native, install Node.js and npm (from https://nodejs.org/)
+- 
+- 
+
+
+Installation Instructions (user):
+TBD
