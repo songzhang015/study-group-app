@@ -32,6 +32,7 @@ Backend:
 - You can leave your virtual environment using "deactivate", and re-enter it using the above activation command
 - Virtual environments help isolate project dependencies for your specific system, use it whenever you are adding new modules
 - Add requirements by using "pip freeze > requirements.txt"
+- Install MongoDB
 
 Installation Instructions (user):
 TBD
