@@ -20,7 +20,7 @@ db = client.flask_database
 
 @app.route('/')
 def index():
-    """Redirects user to the home page."""
+    """Redirects user to the home endpoint."""
     return redirect(url_for("home"))
 
 @app.route('/home')

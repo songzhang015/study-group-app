@@ -1,9 +1,9 @@
 import { Text, View, StyleSheet } from 'react-native';
 
-export default function Index() {
+export default function LoginScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Index Screen</Text>
+      <Text style={styles.text}>Login Screen</Text>
     </View>
   );
 }
