@@ -18,7 +18,7 @@ Frontend:
 - Next, for basic testing you can use Expo Go but for building/later on, you can download Xcode/Android emulator
 
 - Download Expo Go (on your mobile device) on your iOS/Android device, make an account, and run "npm run start" in terminal
-- Scan the QR and you can simulate your app within Expo Go
+- Scan the QR and you can simulate your app within Expo Go (make sure you are on the same wifi)
 - OR
 - Download Xcode (iOS) or Android Studio? (Android)
 - Run the command "npm run ios" or "npm run android"
