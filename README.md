@@ -12,7 +12,7 @@ Installation Instructions (for developers, to be removed)
 Frontend:
 - TODO: Update instructions for both mac/windows
 - For React Native, install Node.js and npm (from https://nodejs.org/)
-- Clone github directory and cd into the project and then cd into the frontend folder.
+- Clone github directory and cd into the project/frontend (make sure you are in the frontend folder).
 - We'll be using Expo (standard framework for React Native), run "npm install" inside the frontend folder
      - Note: If npm is not recognized, try to close and re-open your terminal
 - Next, for basic testing you can use Expo Go but for building/later on, you can download Xcode/Android emulator
