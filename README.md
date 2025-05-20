@@ -17,7 +17,7 @@ Frontend:
      - Note: If npm is not recognized, close and re-open your terminal
 - Next, for basic testing you can use Expo Go but for building/later on, download Xcode/Android emulator
 
-- Download Expo Go on your iOS/Android device, make an account, and run "npm run start" in terminal
+- Download Expo Go (on your mobile device) on your iOS/Android device, make an account, and run "npm run start" in terminal
 - Scan the QR and you can simulate your app within Expo Go
 - OR
 - Download Xcode (iOS) or Android Studio? (Android)
