@@ -1,13 +1,15 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Home Screen</Text>
-      <Link href="/login" style={styles.button}>
-        Go to Login Screen
-      </Link>
+      <Pressable onPress={() => router.push('/')}>
+        <Text style={styles.button}>Go to Login Screen</Text>
+      </Pressable>
     </View>
   );
 }
