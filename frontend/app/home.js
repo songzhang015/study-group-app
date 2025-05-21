@@ -7,6 +7,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const [location, setLocation] = useState(null)
 
+
+
   useEffect(() => {
     async function getCurrentLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,9 +28,13 @@ export default function HomeScreen() {
   let longitude = '0';
   
   if (location && location.coords) {
-    latitude = location.coords.latitude.toFixed(6);
-    longitude = location.coords.longitude.toFixed(6);
+    latitude = location.coords.latitude.toFixed(5);
+    longitude = location.coords.longitude.toFixed(5);
   }
+
+
+
+
 
   return (
     <View style={styles.container}>
@@ -39,12 +45,24 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
+      <View style={styles.findButtonTextContainer}>
+        <Pressable >
+          <Text style={styles.button}>Button 1: Find Nearby Study Groups</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.createButtonTextContainer}>
+        <Pressable>
+          <Text style={styles.button}>Button 2: Create Your Own Group</Text>
+        </Pressable>
+      </View>
 
       <View style={styles.coordinateTextContainer}>
         <Text style={styles.text}>Your coordinates are:</Text>
         <Text style={styles.text}>Latitude: {latitude}</Text>
         <Text style={styles.text}>Longitude: {longitude}</Text>
       </View>
+
 
 
     </View>
@@ -56,19 +74,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#25292e',
   },
+
   logoutButtonContainer: {
     position: 'absolute',
     top: 25,
     right: 20,
   },
-  coordinateTextContainer: {
+
+  findButtonTextContainer: {
     flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 200,
+  },
+
+  createButtonTextContainer: {
+    flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  coordinateTextContainer: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 25,
+  },
+
   text: {
     color: '#fff',
     fontSize: 24,
+    marginBottom: 25,
   },
   button: {
     fontSize: 20,
