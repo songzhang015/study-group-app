@@ -5,9 +5,8 @@ export default function LoginScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Login Screen</Text>
       <Pressable onPress={() => router.push('/home')}>
-        <Text style={styles.button}>Go to Home Screen</Text>
+        <Text style={styles.button}>Login to Study Group App</Text>
       </Pressable>
     </View>
   );
@@ -20,6 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   text: {
     color: '#fff',
   },
@@ -29,4 +29,5 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: '#fff',
   },
+
 });

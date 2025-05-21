@@ -1,14 +1,14 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as Location from 'expo-location'
 
 export default function HomeScreen() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
       <Pressable onPress={() => router.push('/')}>
-        <Text style={styles.button}>Go to Login Screen</Text>
+        <Text style={styles.button}>Logout</Text>
       </Pressable>
     </View>
   );
@@ -18,8 +18,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#25292e',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingTop: 25,
+    paddingRight: 20,
   },
   text: {
     color: '#fff',
