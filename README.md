@@ -37,6 +37,7 @@ Backend:
      - Everytime you install a new library/module, run the pip freeze command so other people can download it too
 - Install MongoDB (https://www.mongodb.com/try/download/community), and make sure the service is started before opening the server
      - Mac: Run "brew services start mongodb/brew/mongodb-community" in the terminal if MongoDB services are not automatically started
-     - Windows: Run "net start MongoDB" or "mongod" in the terminal if MongoDB services are not automatically started
+     - Windows: Run "net start MongoDB" in the terminal if MongoDB services are not automatically started
+            - You may have to run this command in an admin terminal
 - Open app.py with "python app.py" and access it with localhost:5000
 - Use MongoDB Compass to access or see database via its GUI
