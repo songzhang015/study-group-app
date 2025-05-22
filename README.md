@@ -12,8 +12,8 @@ Installation Instructions
 1. Install Node.js from https://nodejs.org/ which includes npm
 2. In the terminal, clone the github directory and cd into the project/frontend folder (make sure you are in the frontend folder)
 3. Run "npm install" inside the frontend folder
-     - Note: If npm is not recognized, try to close and re-open your terminal
-4. You can either install Expo Go on your mobile device or download Xcode/Android Studio
+     - Note: If npm is not recognized, try closing and re-opening your terminal
+4. You can either install Expo Go on your mobile device or download Xcode/Android Studio to test running the app
      - Download Expo Go on your iOS/Android device, make an account, and run "npm run start" in your terminal
      - Scan the QR and you can simulate your app within Expo Go (make sure you are on the same wifi)
      - OR
