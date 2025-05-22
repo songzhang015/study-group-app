@@ -1,13 +1,11 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { useRouter } from 'expo-router';
 import * as Location from 'expo-location'
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [location, setLocation] = useState(null)
-
-
+  const [location, setLocation] : [Location.LocationObject|null, React.Dispatch<SetStateAction<Location.LocationObject|null>>] = useState<Location.LocationObject | null>(null);
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -31,10 +29,6 @@ export default function HomeScreen() {
     latitude = location.coords.latitude.toFixed(5);
     longitude = location.coords.longitude.toFixed(5);
   }
-
-
-
-
 
   return (
     <View style={styles.container}>
@@ -62,9 +56,6 @@ export default function HomeScreen() {
         <Text style={styles.text}>Latitude: {latitude}</Text>
         <Text style={styles.text}>Longitude: {longitude}</Text>
       </View>
-
-
-
     </View>
   );
 }
