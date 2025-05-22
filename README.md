@@ -32,8 +32,9 @@ Backend:
 - Once activated, run "pip install -r requirements.txt"
      - If you get an error, run "pip cache purge" first before pip install
 - You can leave your virtual environment using "deactivate", and re-enter it using the above activation command
-- Virtual environments help isolate project dependencies for your specific system, use it whenever you are adding new modules
+     - Virtual environments help isolate project dependencies for your specific system, activate it whenever you are developing the backend
 - Add requirements by using "pip freeze > requirements.txt"
+     - Everytime you install a new library/module, run the pip freeze command so other people can download it too
 - Install MongoDB (https://www.mongodb.com/try/download/community), and make sure the service is started before opening the server
      - Mac: Run "brew services start mongodb/brew/mongodb-community" in the terminal if MongoDB services are not automatically started
      - Windows: Run "net start MongoDB" or "mongod" in the terminal if MongoDB services are not automatically started
