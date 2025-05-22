@@ -7,7 +7,7 @@ A location-based app for forming and finding study groups nearby for similar cou
 - Sawyer Christensen
 - Song Zhang
 
-Installation Instructions
+## Installation Instructions
 
 1. Install Node.js from https://nodejs.org/ which includes npm
 2. In the terminal, clone the github directory and cd into the project/frontend folder (make sure you are in the frontend folder)
@@ -21,12 +21,16 @@ Installation Instructions
      - Run the command "npm run ios" or "npm run android" in your terminal
 
 Backend:
-- TODO: Update instructions for both mac/windows
-- Download Python if you haven't already (you should have this)
-- cd into the backend folder
-- Create a virtual environment, use "python3 -m venv venv" (or some variation for your own system)
-- Activate it using "source venv/bin/activate" for Mac, something like "venv\Scripts\activate" for Windows?
+- Make sure the above installation instructions work
+- Download Python if you haven't already (https://www.python.org/downloads/)
+- cd into the project's backend folder
+- Create a virtual environment, use "python3 -m venv venv" (if "python3" is not recognized, try "python" or "py")
+- Activate your virtual environment (do this everytime you wish to work on the backend)
+     - Mac: Activate your env using "source venv/bin/activate"
+     - Windows: Activate your env using "venv\Scripts\activate" OR "venv\bin\activate" if the first command did not work
+     - Make sure the terminal displays a green "(venv)" at the beginning of your prompt
 - Once activated, run "pip install -r requirements.txt"
+     - If you get an error, run "pip cache purge" first before pip install
 - You can leave your virtual environment using "deactivate", and re-enter it using the above activation command
 - Virtual environments help isolate project dependencies for your specific system, use it whenever you are adding new modules
 - Add requirements by using "pip freeze > requirements.txt"
