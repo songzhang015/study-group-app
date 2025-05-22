@@ -7,23 +7,18 @@ A location-based app for forming and finding study groups nearby for similar cou
 - Sawyer Christensen
 - Song Zhang
 
-Installation Instructions (for developers, to be removed)
+Installation Instructions
 
-Frontend:
-- TODO: Update instructions for both mac/windows
-- For React Native, install Node.js and npm (from https://nodejs.org/)
-- Clone github directory and cd into the project/frontend (make sure you are in the frontend folder).
-- We'll be using Expo (standard framework for React Native), run "npm install" inside the frontend folder
+1. Install Node.js from https://nodejs.org/ which includes npm
+2. In the terminal, clone the github directory and cd into the project/frontend folder (make sure you are in the frontend folder)
+3. Run "npm install" inside the frontend folder
      - Note: If npm is not recognized, try to close and re-open your terminal
-- Next, for basic testing you can use Expo Go but for building/later on, you can download Xcode/Android emulator
-
-- Download Expo Go (on your mobile device) on your iOS/Android device, make an account, and run "npm run start" in terminal
-- Scan the QR and you can simulate your app within Expo Go (make sure you are on the same wifi)
-- OR
-- Download Xcode (iOS) or Android Studio? (Android)
-- Run the command "npm run ios" or "npm run android"
-
-- You can modify frontend stuff using frontend/app/index.js
+4. You can either install Expo Go on your mobile device or download Xcode/Android Studio
+     - Download Expo Go on your iOS/Android device, make an account, and run "npm run start" in your terminal
+     - Scan the QR and you can simulate your app within Expo Go (make sure you are on the same wifi)
+     - OR
+     - Download Xcode (iOS) or Android Studio (Android)
+     - Run the command "npm run ios" or "npm run android" in your terminal
 
 Backend:
 - TODO: Update instructions for both mac/windows
@@ -38,6 +33,3 @@ Backend:
 - Install MongoDB, and run the service before opening server with "brew services start mongodb/brew/mongodb-community" (mac)
 - Open app.py with "python app.py" and access it with localhost:5000
 - Use MongoDB Compass to access or see database
-
-Installation Instructions (user):
-TBD
