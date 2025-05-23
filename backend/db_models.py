@@ -61,7 +61,7 @@ class StudyGroup(Document):
     # Whether the group is open to new members joining
     is_open = BooleanField(default=True)
 
-    #Lists of User references who have joined this study group?????
+    #Lists of User references who have joined this study group???
     members = ListField(ReferenceField('User'))
 
     @property
