@@ -10,6 +10,7 @@ from mongoengine import *
 from bson.objectid import ObjectId
 
 
+#this function generates a new unique string ID, using MongoDBs built-in ObjectId.
 def new_obj_id() -> str:
     return str(ObjectId())
 
@@ -21,3 +22,12 @@ class User(Document):
     meta = {'collection': 'users'}
     _id = StringField(primary_key=True, default=new_obj_id)
     username = StringField(required=True, unique=True)
+    email = StringField(required=True, unique=True)
+    password_hash = StringField(required=True)
+    location = PointField(required=False)  # [longitude, latitude]
+    joined_groups = ListField(ReferenceField('StudyGroup'))
+
+class StudyGroup(Document):
+    """
+    A study group that users can create, host, and join.
+    """
