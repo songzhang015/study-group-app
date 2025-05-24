@@ -13,7 +13,6 @@ Currently not connected to mobile app
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 
-
 app = Flask(__name__)
 
 client = MongoClient('localhost', 27017)
@@ -68,13 +67,61 @@ def study_group_item(group_id):
 
     DELETE: Deletes a study group
     """
-    # TODO
+    try:
+        group = StudyGroup.objects.get(_id=group_id)
+    except DoesNotExist:
+        return jsonify({"error": "Study group not found"}), 404
+
     if request.method == 'GET':
-        return jsonify({})
+        # Serialize and return group info
+        return jsonify({
+            "id": group._id,
+            "name": group.name,
+            "description": group.description,
+            "course_code": group.course_code,
+            "host": str(group.host.id) if group.host else None,
+            "location": group.location['coordinates'],
+            "start_time": group.start_time.isoformat(),
+            "end_time": group.end_time.isoformat(),
+            "is_open": group.is_open,
+            "max_members": group.max_members,
+        })
+
     elif request.method == 'PATCH':
-        return jsonify({})
+        data = request.get_json()
+        # Update fields only if present in request
+        group.name = data.get('name', group.name)
+        group.description = data.get('description', group.description)
+        group.course_code = data.get('course_code', group.course_code)
+        group.is_open = data.get('is_open', group.is_open)
+        group.max_members = data.get('max_members', group.max_members)
+
+        if 'location' in data:
+            group.location = data['location']  # Exact [lng, lat]???
+        if 'start_time' in data:
+            group.start_time = data['start_time']
+        if 'end_time' in data:
+            group.end_time = data['end_time']
+
+        try:
+            group.save()
+            return jsonify({"message": "Study group has been updated"})
+        except ValidationError as e:
+            return jsonify({"error": str(e)}), 400
+
     elif request.method == 'DELETE':
-        return jsonify({})
+        group.delete()
+        return jsonify({"message": "Study group has been deleted"})
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/study-groups/<group_id>/status', methods=['PATCH'])
 def study_group_status(group_id):
