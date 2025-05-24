@@ -30,24 +30,76 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    """Authenticates a user login with their credentials"""
+    """Authenticates a user login with their credentials
+    3 sample users for prototype, no email/password login
+
+    Request:
+    {
+      "user_selection": "user1"
+    }
+    
+    Response:
+    {
+      "message": "Login successful as User 1",
+      "user_id": "abc123"
+    }
+    """
     # TODO
     return jsonify({})
 
 @app.route('/users/<user_id>', methods=['GET'])
 def user_profile(user_id):
-    """Retrieves information (ex. their study group) about a user using their ID"""
+    """Retrieves information (ex. their study group) about a user using their ID
+
+    Response:
+    {
+      "user": {
+        "id": "abc123",
+        "username": "user1",
+        "location": {
+          "latitude": 12.34567,
+          "longitude": 12.34567
+        },
+        "current_study_group_id": "abc123"
+      }
+    }
+    """
     # TODO
     return jsonify({})
 
 @app.route('/study-groups', methods=['GET', 'POST'])
 def study_group_collection():
-    """
-    Handles collection of study groups
+    """Handles collection of study groups
     
     GET: Lists all study groups
+    Response:
+    [
+      {
+        "id": "abc123",
+        "name": "Topic 1",
+      },
+      {
+        "id": "abc123",
+        "name": "Topic 2",
+      }
+    ]
     
     POST: Creates a new study group
+    Request:
+    {
+      "name": "Topic 1",
+      "description": "Text",
+      "owner_id": "abc123",
+      "location": {
+        "latitude": 12.34567,
+        "longitude": 12.34567
+      },
+      "max_members": 5
+    }
+    Response:
+    {
+      "message": "Study group created successfully",
+    }
     """
     # TODO
     if request.method == 'GET':
@@ -57,14 +109,45 @@ def study_group_collection():
 
 @app.route('/study-groups/<group_id>', methods=['GET', 'PATCH', 'DELETE'])
 def study_group_item(group_id):
-    """
-    Handles singular study group
+    """Handles singular study group
 
     GET: Retrieves information about a study group using their ID
+    Response:
+    {
+      "study_group": {
+        "id": "abc123",
+        "name": "Topic 1",
+        "description": "Text",
+        "owner_id": "abc123",
+        "location": {
+          "latitude": 12.34567,
+          "longitude": 12.34567
+        },
+        "is_active": true,
+        "max_members": 5,
+        "current_members_count": 5,
+        "members": [
+          "abc123",
+          "abc123"
+        ],
+      }
+    }
 
     PATCH: Updates an existing study group's details
-
+    Request:
+    {
+      "description": "Updated text"
+    }
+    Response:
+    {
+      "message": "Study group updated successfully"
+    }
+    
     DELETE: Deletes a study group
+    Response:
+    {
+      "message": "Study group deleted successfully"
+    }
     """
     try:
         group = StudyGroup.objects.get(_id=group_id)
@@ -113,32 +196,45 @@ def study_group_item(group_id):
         return jsonify({"message": "Study group has been deleted"})
 
 
-
-
-
-
-
 @app.route('/study-groups/<group_id>/status', methods=['PATCH'])
 def study_group_status(group_id):
-    """
-    Modifies the broadcast status of study group
-    
+    """Modifies the broadcast status of study group
+
     If active, shows up in list for users to see
 
-    Something like a boolean called "is_active" in study group item
+    Request:
+    {
+      "is_active": true
+    }
+    Response:
+    {
+      "message": "Study group status updated successfully"
+    }
     """
     # TODO
     return jsonify({})
 
 @app.route('/study-groups/<group_id>/members', methods=['POST'])
-def study_group_members_add(group_id):
-    """Adds user to study group"""
+def study_group_members_add(group_id, user_id):
+    """Adds user to study group
+
+    Response:
+    {
+      "message": "User added to study group successfully"
+    }
+    """
     # TODO
     return jsonify({})
 
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['DELETE'])
 def study_group_members_remove(group_id, user_id):
-    """Removes user from study group"""
+    """Removes user from study group
+    
+    Response:
+    {
+      "message": "User removed from study group successfully"
+    }
+    """
     # TODO
     return jsonify({})
 
