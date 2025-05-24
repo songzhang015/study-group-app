@@ -21,8 +21,7 @@ db = client.flask_database
 @app.route('/')
 def index():
     """Returns simple API status message"""
-    # TODO
-    return jsonify({})
+    return jsonify({"message": "Flask API is running"})
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -112,10 +111,6 @@ def study_group_item(group_id):
     elif request.method == 'DELETE':
         group.delete()
         return jsonify({"message": "Study group has been deleted"})
-
-
-
-
 
 
 
