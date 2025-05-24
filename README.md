@@ -14,6 +14,7 @@ A location-based app for forming and finding study groups nearby for similar cou
 3. Run "npm install" inside the frontend folder
      - Note: If npm is not recognized, try closing and re-opening your terminal
 4. You can either install Expo Go on your mobile device or download Xcode/Android Studio to test running the app
+5. Alternatively, if you run "npm run start", you can press 'w' inside the terminal to open the web version of the app
      - Download Expo Go on your iOS/Android device, make an account, and run "npm run start" in your terminal
      - Scan the QR and you can simulate your app within Expo Go (make sure you are on the same wifi)
      - OR
