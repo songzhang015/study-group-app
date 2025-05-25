@@ -4,6 +4,7 @@ MongoDB object schemas for CS 422 Project 2: Study Group App.
 This file defines MongoEngine models for storing users and study groups,
 with support for geolocation (latitude/longitude).
 
+Author: Derek Van Devender
 """
 
 from mongoengine import *

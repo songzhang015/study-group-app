@@ -1,6 +1,8 @@
 """
 Seeder file to populate the database with 3 default users
 Ran automatically when server is started, but will only populate IF database is empty
+
+Author: Derek Van Devender
 """
 
 from db_models import User

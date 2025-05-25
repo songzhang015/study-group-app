@@ -1,13 +1,11 @@
 """
-Basic Flask Backend
+Server backend code made using Flask
 
-Run using "python app.py" while in backend directory
+Run using "python3 app.py" while in the backend directory
 
-Access using:
-http://localhost:5000/
+Used for storing/retrieving data between app and MongoDB
 
-Used for storing data between app and MongoDB
-Currently not connected to mobile app
+Authors: Derek Van Devender, Song Zhang
 """
 
 from flask import Flask, jsonify, request
@@ -22,7 +20,7 @@ app = Flask(__name__)
 # Connect to MongoDB (local instance)
 connect(db='flask_database', host='localhost', port=27017)
 
-# Populates the database with 3 default users IF databse is empty
+# Populates the database with 3 default users IF database is empty
 if User.objects.count() == 0:
     seed_db()
 
