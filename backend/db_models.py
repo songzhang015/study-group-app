@@ -46,7 +46,7 @@ class StudyGroup(Document):
     name = StringField(required=True)
     # Optional description of the group
     description = StringField()
-    course_code = StringField(required=True)
+    # course_code = StringField(required=True), commented out for now
 
     # Refers to the User document who is the host of this group
     owner_id = ReferenceField(required=True)
@@ -54,9 +54,9 @@ class StudyGroup(Document):
     # Geolocation of the study group (longitude, latitude), stored using GeoJSON format
     location = PointField(required=True)
 
-    # Scheduled start to the end time of the study session
-    start_time = DateTimeField(required=True)
-    end_time = DateTimeField(required=True)
+    # Scheduled start to the end time of the study session, commented out for now
+    # start_time = DateTimeField(required=True)
+    # end_time = DateTimeField(required=True)
 
     # Maximum number of allowed members in the group. Does it even need a limit???
     max_members = IntField(default=10)
