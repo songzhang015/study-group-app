@@ -230,7 +230,7 @@ def study_group_item(group_id):
     try:
         group = StudyGroup.objects.get(_id=group_id)
     except DoesNotExist:
-        return jsonify({"error": "Study group not found"}), 404
+        return jsonify({"message": "Study group not found"}), 404
     if request.method == 'GET':
         return jsonify({
             "_id": group._id,
@@ -256,9 +256,10 @@ def study_group_item(group_id):
         return jsonify({"message": "Study group has been updated"})
 
     elif request.method == 'DELETE':
-        owner = group.owner
-        owner.current_study_group_id = ""
-        owner.save()
+        all_members = list(group.members)
+        for member in all_members:
+            member.current_study_group_id = ""
+            member.save()
         group.delete()
         return jsonify({"message": "Study group has been deleted"})
 
@@ -286,16 +287,33 @@ def study_group_status(group_id):
 
 
 @app.route('/study-groups/<group_id>/members', methods=['POST'])
-def study_group_members_add(group_id, user_id):
+def study_group_members_add(group_id):
     """Adds user to study group
-
+    Request:
+    {
+      "_id": "abc123 (of user)"
+    }
     Response:
     {
       "message": "User added to study group successfully"
     }
     """
-    # TODO
-    return jsonify({})
+    data = request.get_json()
+    user_id = data['_id']
+
+    group = StudyGroup.objects.get(_id=group_id)
+    user = User.objects.get(_id=user_id)
+    if user in group.members:
+        return jsonify({"message": "User is already a member of this study group"}), 409
+    if user.current_study_group_id:
+        return jsonify({"message": "User is already a member of another study group"}), 409
+    if len(group.members) >= group.max_members:
+        return jsonify({"message": "Study group is full"}), 400
+    user.current_study_group_id = group.id
+    user.save()
+    group.members.append(user)
+    group.save()
+    return jsonify({"message": f"User added to study group successfully"}), 201
 
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['DELETE'])
 def study_group_members_remove(group_id, user_id):
