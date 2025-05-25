@@ -11,12 +11,12 @@ Currently not connected to mobile app
 """
 
 from flask import Flask, jsonify, request
-from flask_cors import CORS #I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
+# from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
 from mongoengine import connect
 from db_models import User, StudyGroup
 
 app = Flask(__name__)
-CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
+# CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
 
 
 # Connect to MongoDB (local instance)
@@ -262,7 +262,7 @@ def study_group_members_add(group_id, user_id):
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['DELETE'])
 def study_group_members_remove(group_id, user_id):
     """Removes user from study group
-    
+
     Response:
     {
       "message": "User removed from study group successfully"
