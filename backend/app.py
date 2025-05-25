@@ -279,29 +279,29 @@ def study_group_status(group_id):
       "message": "Study group status updated successfully"
     }
     """
-    group = StudyGroup.objects.get(_id=group_id)
+    try:
+        group = StudyGroup.objects.get(_id=group_id)
+    except DoesNotExist:
+        return jsonify({"error": "Study group not found."}), 404
     data = request.get_json()
     group.is_open = data.get('is_open', group.is_open)
     group.save()
     return jsonify({"message": "Study group status updated successfully"})
 
 
-@app.route('/study-groups/<group_id>/members', methods=['POST'])
-def study_group_members_add(group_id):
+@app.route('/study-groups/<group_id>/members/<user_id>', methods=['POST'])
+def study_group_members_add(group_id, user_id):
     """Adds user to study group
-    Request:
-    {
-      "_id": "abc123 (of user)"
-    }
+
     Response:
     {
       "message": "User added to study group successfully"
     }
     """
-    data = request.get_json()
-    user_id = data['_id']
-
-    group = StudyGroup.objects.get(_id=group_id)
+    try:
+        group = StudyGroup.objects.get(_id=group_id)
+    except DoesNotExist:
+        return jsonify({"error": "Study group not found."}), 404
     user = User.objects.get(_id=user_id)
     if user in group.members:
         return jsonify({"message": "User is already a member of this study group"}), 409
@@ -324,8 +324,20 @@ def study_group_members_remove(group_id, user_id):
       "message": "User removed from study group successfully"
     }
     """
-    # TODO
-    return jsonify({})
+    try:
+        group = StudyGroup.objects.get(_id=group_id)
+    except DoesNotExist:
+        return jsonify({"error": "Study group not found."}), 404
+    user = User.objects.get(_id=user_id)
+    if user not in group.members:
+        return jsonify({"message": "User is not a member of this study group."}), 404
+    if user_id == group.owner.id:
+        return jsonify({"message": "The owner cannot leave the study group, try deleting the group instead."}), 403
+    group.members.remove(user)
+    group.save()
+    user.current_study_group_id = ""
+    user.save()
+    return jsonify({"message": "User removed from study group successfully"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
