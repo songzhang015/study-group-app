@@ -20,9 +20,9 @@ class User(Document):
     A user of the study group app.
     """
     meta = {'collection': 'users'}
-    _id = StringField(primary_key=True, default=new_obj_id)     # Unique ID for each user
+    _id = StringField(primary_key=True, default=new_obj_id)
+    # Only storing username and location
     username = StringField(required=True, unique=True)
-    password_hash = StringField(required=True)
     location = PointField(required=False)  # [longitude, latitude]
     joined_groups = ListField(ReferenceField('StudyGroup'))
 

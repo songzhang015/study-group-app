@@ -5,39 +5,33 @@ Run using: python seeder.py
 
 from mongoengine import connect, disconnect
 from db_models import User
-import hashlib
 
 # Connect to MongoDB
 connect(db='flask_database', host='localhost', port=27017)
 
-# Helper to hash passwords???
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
+#Optionally clears existing users to avoid possible duplicates
+User.drop_collection()
 
-# Creates sample users. Location still NOT decided on!!! Included Password???
+# Sample users for the prototype (username + location only)
 users = [
     {
         "username": "alice",
-        "password": "694208008",
-        "location": {"type": "Point", "coordinates": [0, 0]},
+        "location": {"type": "Point", "coordinates": [-122.4194, 37.7749]},  # San Francisco
     },
     {
         "username": "bob",
-        "password": "654321",
-        "location": {"type": "Point", "coordinates": [0, 0]},
+        "location": {"type": "Point", "coordinates": [-118.2437, 34.0522]},  # Los Angeles
     },
     {
         "username": "charlie",
-        "password": "sowrd789",
-        "location": {"type": "Point", "coordinates": [0, 0]},
+        "location": {"type": "Point", "coordinates": [-73.9352, 40.7306]},   # New York
     }
 ]
 
-# Save users to DB
+# Save each user to the database
 for u in users:
     user = User(
         username=u['username'],
-        password_hash=hash_password(u['password']),
         location=u['location']
     )
     user.save()
