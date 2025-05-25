@@ -256,6 +256,9 @@ def study_group_item(group_id):
         return jsonify({"message": "Study group has been updated"})
 
     elif request.method == 'DELETE':
+        owner = group.owner
+        owner.current_study_group_id = ""
+        owner.save()
         group.delete()
         return jsonify({"message": "Study group has been deleted"})
 
@@ -275,8 +278,12 @@ def study_group_status(group_id):
       "message": "Study group status updated successfully"
     }
     """
-    # TODO
-    return jsonify({})
+    group = StudyGroup.objects.get(_id=group_id)
+    data = request.get_json()
+    group.is_open = data.get('is_open', group.is_open)
+    group.save()
+    return jsonify({"message": "Study group status updated successfully"})
+
 
 @app.route('/study-groups/<group_id>/members', methods=['POST'])
 def study_group_members_add(group_id, user_id):
