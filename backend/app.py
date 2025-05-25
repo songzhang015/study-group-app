@@ -12,7 +12,7 @@ Currently not connected to mobile app
 
 from flask import Flask, jsonify, request
 # from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
-from mongoengine import connect
+from mongoengine import connect, DoesNotExist
 from db_models import User, StudyGroup
 from seeder import seed_db
 
@@ -27,7 +27,7 @@ if User.objects.count() == 0:
     seed_db()
 
 
-#My Test Route
+# Test Route
 """
 @app.route('/users', methods=['GET'])
 def list_users():
@@ -41,9 +41,6 @@ def list_users():
         for u in users
     ])
 """
-
-
-
 
 
 @app.route('/')
@@ -146,7 +143,7 @@ def study_group_collection():
     {
       "name": "Topic 1",
       "description": "Text",
-      "owner_id": "abc123,
+      "owner_id": "abc123",
       "max_members": 5
     }
     Response:
@@ -166,7 +163,6 @@ def study_group_collection():
         return jsonify(groups_list), 200
     elif request.method == 'POST':
         data = request.get_json()
-
         owner_id = data.get('owner_id')
         owner_user_object = User.objects(_id=owner_id).first()
         if not owner_user_object.current_study_group_id:
@@ -202,10 +198,10 @@ def study_group_item(group_id):
         "description": "Text",
         "owner_id": "abc123",
         "location": {
-          "latitude": 12.34567,
-          "longitude": 12.34567
+          "longitude": 12.34567,
+          "latitude": 12.34567
         },
-        "is_active": true,
+        "is_open": true,
         "max_members": 5,
         "current_members_count": 5,
         "members": [
@@ -235,18 +231,13 @@ def study_group_item(group_id):
         group = StudyGroup.objects.get(_id=group_id)
     except DoesNotExist:
         return jsonify({"error": "Study group not found"}), 404
-
     if request.method == 'GET':
-        # Serialize and return group info
         return jsonify({
             "_id": group._id,
             "name": group.name,
             "description": group.description,
-            "course_code": group.course_code,
-            "host": str(group.host.id) if group.host else None,
+            "owner": str(group.owner.id),
             "location": group.location['coordinates'],
-            "start_time": group.start_time.isoformat(),
-            "end_time": group.end_time.isoformat(),
             "is_open": group.is_open,
             "max_members": group.max_members,
         })
@@ -256,22 +247,13 @@ def study_group_item(group_id):
         # Update fields only if present in request
         group.name = data.get('name', group.name)
         group.description = data.get('description', group.description)
-        group.course_code = data.get('course_code', group.course_code)
         group.is_open = data.get('is_open', group.is_open)
         group.max_members = data.get('max_members', group.max_members)
 
         if 'location' in data:
-            group.location = data['location']  # Exact [lng, lat]???
-        if 'start_time' in data:
-            group.start_time = data['start_time']
-        if 'end_time' in data:
-            group.end_time = data['end_time']
-
-        try:
-            group.save()
-            return jsonify({"message": "Study group has been updated"})
-        except ValidationError as e:
-            return jsonify({"error": str(e)}), 400
+            group.location = [data['location']['longitude'], data['location']['latitude']]  # Format: [lng, lat]
+        group.save()
+        return jsonify({"message": "Study group has been updated"})
 
     elif request.method == 'DELETE':
         group.delete()
@@ -286,7 +268,7 @@ def study_group_status(group_id):
 
     Request:
     {
-      "is_active": true
+      "is_open": true
     }
     Response:
     {
