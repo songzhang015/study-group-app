@@ -19,7 +19,6 @@ from seeder import seed_db
 app = Flask(__name__)
 # CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
 
-
 # Connect to MongoDB (local instance)
 connect(db='flask_database', host='localhost', port=27017)
 
@@ -28,9 +27,8 @@ if User.objects.count() == 0:
     seed_db()
 
 
-
-
 #My Test Route
+"""
 @app.route('/users', methods=['GET'])
 def list_users():
     users = User.objects()
@@ -42,13 +40,7 @@ def list_users():
         }
         for u in users
     ])
-
-
-
-
-
-
-
+"""
 
 
 
@@ -80,8 +72,19 @@ def login():
       "user_id": "abc123"
     }
     """
-    # TODO
-    return jsonify({})
+    data = request.get_json()
+
+    username = data['user_selection']
+
+    user = User.objects(username=username).first()
+
+    if user:
+        return jsonify({
+            "message": f"Login successful as {username}",
+            "user_id": str(user._id)
+        }), 200
+    else:
+        return jsonify({"message": f"User '{username}' not found."}), 404
 
 @app.route('/users/<user_id>', methods=['GET'])
 def user_profile(user_id):

@@ -12,15 +12,15 @@ def seed_db():
     # Sample users for the prototype (username + location only)
     users = [
         {
-            "username": "alice",
+            "username": "Alice",
             "location": {"type": "Point", "coordinates": [-122.4194, 37.7749]},  # San Francisco
         },
         {
-            "username": "bob",
+            "username": "Bob",
             "location": {"type": "Point", "coordinates": [-118.2437, 34.0522]},  # Los Angeles
         },
         {
-            "username": "charlie",
+            "username": "Charlie",
             "location": {"type": "Point", "coordinates": [-73.9352, 40.7306]},   # New York
         }
     ]
