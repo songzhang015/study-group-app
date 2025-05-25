@@ -146,23 +146,48 @@ def study_group_collection():
     {
       "name": "Topic 1",
       "description": "Text",
-      "owner_id": "abc123",
-      "location": {
-        "latitude": 12.34567,
-        "longitude": 12.34567
-      },
+      "owner_id": "abc123,
       "max_members": 5
     }
     Response:
     {
-      "message": "Study group created successfully",
+      "message": "Study group created successfully.",
     }
     """
-    # TODO
     if request.method == 'GET':
-        return jsonify({})
+        groups = StudyGroup.objects.all()
+
+        groups_list = []
+        for group in groups:
+            groups_list.append({
+                "_id": str(group._id),
+                "name": group.name
+            })
+        return jsonify(groups_list), 200
     elif request.method == 'POST':
-        return jsonify({})
+        data = request.get_json()
+
+        owner_id = data.get('owner_id')
+        owner_user_object = User.objects(_id=owner_id).first()
+        if not owner_user_object.current_study_group_id:
+            study_group_location = owner_user_object.location
+
+            new_group = StudyGroup(
+                name=data.get('name'),
+                description=data.get('description'),
+                owner=owner_user_object,
+                location=study_group_location,
+                max_members=data.get('max_members')
+            )
+            new_group.save()
+            new_group.members.append(owner_user_object)
+            new_group.save()
+            owner_user_object.current_study_group_id = new_group.id
+            owner_user_object.save()
+            return jsonify({"message": f"Study group created successfully.",}), 201
+        else:
+            return jsonify({"message": f"User is already associated with a study group.",}), 409
+        
 
 @app.route('/study-groups/<group_id>', methods=['GET', 'PATCH', 'DELETE'])
 def study_group_item(group_id):
