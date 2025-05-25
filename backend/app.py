@@ -34,7 +34,7 @@ def list_users():
     users = User.objects()
     return jsonify([
         {
-            "id": u._id,
+            "_id": u._id,
             "username": u.username,
             "location": u.location['coordinates'] if u.location else None
         }
@@ -60,6 +60,7 @@ def register():
 def login():
     """Authenticates a user login with their credentials
     3 sample users for prototype, no email/password login
+    Current usernames are "Alice", "Bob", "Charlie"
 
     Request:
     {
@@ -93,18 +94,35 @@ def user_profile(user_id):
     Response:
     {
       "user": {
-        "id": "abc123",
+        "_id": "abc123",
         "username": "user1",
         "location": {
-          "latitude": 12.34567,
-          "longitude": 12.34567
+          "longitude": 12.34567,
+          "latitude": 12.34567
         },
         "current_study_group_id": "abc123"
       }
     }
     """
-    # TODO
-    return jsonify({})
+    user = User.objects(_id=user_id).first()
+    if user:
+        loc_data = None
+        if user.location:
+            # MongoDB stores longitude first
+            loc_data = {
+                "longitude": user.location[0],
+                "latitude": user.location[1]
+            }
+        return jsonify({
+            "user": {
+                "id": str(user._id),
+                "username": user.username,
+                "location": loc_data,
+                "current_study_group_id": user.current_study_group_id
+            }
+        }), 200
+    else:
+        return jsonify({"message": "User not found"}), 404
 
 @app.route('/study-groups', methods=['GET', 'POST'])
 def study_group_collection():
@@ -114,11 +132,11 @@ def study_group_collection():
     Response:
     [
       {
-        "id": "abc123",
+        "_id": "abc123",
         "name": "Topic 1",
       },
       {
-        "id": "abc123",
+        "_id": "abc123",
         "name": "Topic 2",
       }
     ]
@@ -154,7 +172,7 @@ def study_group_item(group_id):
     Response:
     {
       "study_group": {
-        "id": "abc123",
+        "_id": "abc123",
         "name": "Topic 1",
         "description": "Text",
         "owner_id": "abc123",
@@ -196,7 +214,7 @@ def study_group_item(group_id):
     if request.method == 'GET':
         # Serialize and return group info
         return jsonify({
-            "id": group._id,
+            "_id": group._id,
             "name": group.name,
             "description": group.description,
             "course_code": group.course_code,
