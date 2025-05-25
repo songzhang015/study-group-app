@@ -11,10 +11,13 @@ Currently not connected to mobile app
 """
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS #I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
 from mongoengine import connect
 from db_models import User, StudyGroup
 
 app = Flask(__name__)
+CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
+
 
 # Connect to MongoDB (local instance)
 connect(db='flask_database', host='localhost', port=27017)
