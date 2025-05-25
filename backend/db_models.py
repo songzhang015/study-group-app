@@ -49,7 +49,7 @@ class StudyGroup(Document):
     # course_code = StringField(required=True), commented out for now
 
     # Refers to the User document who is the host of this group
-    owner_id = ReferenceField(required=True)
+    owner_id = ReferenceField('User', required=True)
 
     # Geolocation of the study group (longitude, latitude), stored using GeoJSON format
     location = PointField(required=True)
