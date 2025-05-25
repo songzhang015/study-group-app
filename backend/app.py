@@ -110,8 +110,8 @@ def user_profile(user_id):
         if user.location:
             # MongoDB stores longitude first
             loc_data = {
-                "longitude": user.location[0],
-                "latitude": user.location[1]
+                "longitude": user.location['coordinates'][0],
+                "latitude": user.location['coordinates'][1]
             }
         return jsonify({
             "user": {
