@@ -11,12 +11,44 @@ Currently not connected to mobile app
 """
 
 from flask import Flask, jsonify, request
-from pymongo import MongoClient
+from flask_cors import CORS
+from mongoengine import connect
+from db_models import User, StudyGroup
 
 app = Flask(__name__)
+CORS(app)  # Should all the frontend (Expo Go) to access this API. I THINK.
 
-client = MongoClient('localhost', 27017)
-db = client.flask_database
+# Connect to MongoDB (local instance)
+connect(db='flask_database', host='localhost', port=27017)
+
+
+
+
+
+
+#My Test Route
+@app.route('/users', methods=['GET'])
+def list_users():
+    users = User.objects()
+    return jsonify([
+        {
+            "id": u._id,
+            "username": u.username,
+            "location": u.location['coordinates'] if u.location else None
+        }
+        for u in users
+    ])
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/')
 def index():
