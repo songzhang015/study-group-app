@@ -29,7 +29,8 @@ def seed_db():
     for u in users:
         user = User(
             username=u['username'],
-            location=u['location']
+            location=u['location'],
+            current_study_group_id=""
         )
         user.save()
         print(f"Created user: {user.username}")

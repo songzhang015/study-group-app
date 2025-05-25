@@ -21,10 +21,10 @@ class User(Document):
     """
     meta = {'collection': 'users'}
     _id = StringField(primary_key=True, default=new_obj_id)
-    # Only storing username and location
     username = StringField(required=True, unique=True)
     location = PointField(required=False)  # [longitude, latitude]
-    joined_groups = ListField(ReferenceField('StudyGroup'))
+    current_study_group_id = StringField(required=False)
+    # joined_groups = ListField(ReferenceField('StudyGroup')) # Going to comment this out for now, to match app.py
 
 
 class StudyGroup(Document):
