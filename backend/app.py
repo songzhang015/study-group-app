@@ -11,12 +11,10 @@ Currently not connected to mobile app
 """
 
 from flask import Flask, jsonify, request
-from flask_cors import CORS
 from mongoengine import connect
 from db_models import User, StudyGroup
 
 app = Flask(__name__)
-CORS(app)  # Should make all the frontend (Expo Go) to access this API. I THINK...
 
 # Connect to MongoDB (local instance)
 connect(db='flask_database', host='localhost', port=27017)
