@@ -32,12 +32,14 @@ class StudyGroup(Document):
     A study group that users can create, host, and join.
     """
     # Metadata for MongoEngine sets the collection name and indexes location data
+    """
     meta = {
         'collection': 'studygroups',  # Stores documents in "studygroups" MongoDB collection
         'indexes': [
             {'fields': ['$location'], '2dsphere': True} #Supposed to allow geospatial queries on the 'location'
         ]
     }
+    """
 
     # Unique ID for each study group, stored as a string
     _id = StringField(primary_key=True, default=new_obj_id)
@@ -47,7 +49,7 @@ class StudyGroup(Document):
     course_code = StringField(required=True)
 
     # Refers to the User document who is the host of this group
-    host = ReferenceField('User', required=True)
+    owner_id = ReferenceField(required=True)
 
     # Geolocation of the study group (longitude, latitude), stored using GeoJSON format
     location = PointField(required=True)
