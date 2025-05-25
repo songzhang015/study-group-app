@@ -101,25 +101,25 @@ def user_profile(user_id):
       }
     }
     """
-    user = User.objects(_id=user_id).first()
-    if user:
-        loc_data = None
-        if user.location:
-            # MongoDB stores longitude first
-            loc_data = {
-                "longitude": user.location['coordinates'][0],
-                "latitude": user.location['coordinates'][1]
-            }
-        return jsonify({
-            "user": {
-                "id": str(user._id),
-                "username": user.username,
-                "location": loc_data,
-                "current_study_group_id": user.current_study_group_id
-            }
-        }), 200
-    else:
-        return jsonify({"message": "User not found"}), 404
+    try: 
+        user = User.objects.get(_id=user_id)
+    except DoesNotExist:
+        return jsonify({"message": "User not found."}), 404
+    loc_data = None
+    if user.location:
+        # MongoDB stores longitude first
+        loc_data = {
+            "longitude": user.location['coordinates'][0],
+            "latitude": user.location['coordinates'][1]
+        }
+    return jsonify({
+        "user": {
+            "id": str(user._id),
+            "username": user.username,
+            "location": loc_data,
+            "current_study_group_id": user.current_study_group_id
+        }
+    }), 200
 
 @app.route('/study-groups', methods=['GET', 'POST'])
 def study_group_collection():
@@ -164,7 +164,7 @@ def study_group_collection():
     elif request.method == 'POST':
         data = request.get_json()
         owner_id = data.get('owner_id')
-        owner_user_object = User.objects(_id=owner_id).first()
+        owner_user_object = User.objects.get(_id=owner_id)
         if not owner_user_object.current_study_group_id:
             study_group_location = owner_user_object.location
 
@@ -218,19 +218,19 @@ def study_group_item(group_id):
     }
     Response:
     {
-      "message": "Study group updated successfully"
+      "message": "Study group updated successfully."
     }
     
     DELETE: Deletes a study group
     Response:
     {
-      "message": "Study group deleted successfully"
+      "message": "Study group deleted successfully."
     }
     """
     try:
         group = StudyGroup.objects.get(_id=group_id)
     except DoesNotExist:
-        return jsonify({"message": "Study group not found"}), 404
+        return jsonify({"message": "Study group not found."}), 404
     if request.method == 'GET':
         return jsonify({
             "_id": group._id,
@@ -253,7 +253,7 @@ def study_group_item(group_id):
         if 'location' in data:
             group.location = [data['location']['longitude'], data['location']['latitude']]  # Format: [lng, lat]
         group.save()
-        return jsonify({"message": "Study group has been updated"})
+        return jsonify({"message": "Study group has been updated."})
 
     elif request.method == 'DELETE':
         all_members = list(group.members)
@@ -261,7 +261,7 @@ def study_group_item(group_id):
             member.current_study_group_id = ""
             member.save()
         group.delete()
-        return jsonify({"message": "Study group has been deleted"})
+        return jsonify({"message": "Study group has been deleted."})
 
 
 @app.route('/study-groups/<group_id>/status', methods=['PATCH'])
@@ -276,7 +276,7 @@ def study_group_status(group_id):
     }
     Response:
     {
-      "message": "Study group status updated successfully"
+      "message": "Study group status updated successfully."
     }
     """
     try:
@@ -286,7 +286,7 @@ def study_group_status(group_id):
     data = request.get_json()
     group.is_open = data.get('is_open', group.is_open)
     group.save()
-    return jsonify({"message": "Study group status updated successfully"})
+    return jsonify({"message": "Study group status updated successfully."})
 
 
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['POST'])
@@ -295,25 +295,28 @@ def study_group_members_add(group_id, user_id):
 
     Response:
     {
-      "message": "User added to study group successfully"
+      "message": "User added to study group successfully."
     }
     """
     try:
         group = StudyGroup.objects.get(_id=group_id)
     except DoesNotExist:
         return jsonify({"error": "Study group not found."}), 404
-    user = User.objects.get(_id=user_id)
+    try:
+        user = User.objects.get(_id=user_id)
+    except DoesNotExist:
+        return jsonify({"error": "User not found."}), 404
     if user in group.members:
-        return jsonify({"message": "User is already a member of this study group"}), 409
+        return jsonify({"message": "User is already a member of this study group."}), 409
     if user.current_study_group_id:
-        return jsonify({"message": "User is already a member of another study group"}), 409
+        return jsonify({"message": "User is already a member of another study group."}), 409
     if len(group.members) >= group.max_members:
         return jsonify({"message": "Study group is full"}), 400
     user.current_study_group_id = group.id
     user.save()
     group.members.append(user)
     group.save()
-    return jsonify({"message": f"User added to study group successfully"}), 201
+    return jsonify({"message": f"User added to study group successfully."}), 201
 
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['DELETE'])
 def study_group_members_remove(group_id, user_id):
@@ -321,14 +324,17 @@ def study_group_members_remove(group_id, user_id):
 
     Response:
     {
-      "message": "User removed from study group successfully"
+      "message": "User removed from study group successfully."
     }
     """
     try:
         group = StudyGroup.objects.get(_id=group_id)
     except DoesNotExist:
         return jsonify({"error": "Study group not found."}), 404
-    user = User.objects.get(_id=user_id)
+    try:
+        user = User.objects.get(_id=user_id)
+    except DoesNotExist:
+        return jsonify({"error": "User not found."}), 404
     if user not in group.members:
         return jsonify({"message": "User is not a member of this study group."}), 404
     if user_id == group.owner.id:
@@ -337,7 +343,7 @@ def study_group_members_remove(group_id, user_id):
     group.save()
     user.current_study_group_id = ""
     user.save()
-    return jsonify({"message": "User removed from study group successfully"}), 200
+    return jsonify({"message": "User removed from study group successfully."}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
