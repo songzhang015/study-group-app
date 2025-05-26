@@ -6,29 +6,32 @@ import * as Location from 'expo-location'
 export default function HomeScreen() {
   const router = useRouter();
   const [location, setLocation] : [Location.LocationObject|null, React.Dispatch<SetStateAction<Location.LocationObject|null>>] = useState<Location.LocationObject | null>(null);
+  const [latitude, setLatitude] = useState('0')
+  const [longitude, setLongitude] = useState('0')
 
   useEffect(() => {
     async function getCurrentLocation() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log("Permission not granted!")
-        return;
+      console.log("checking location permissions");
+      let perms = await Location.getForegroundPermissionsAsync();
+      if(perms.status !== 'granted'){
+        console.log("requesting location permissions");
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.warn("Location permission not granted!")
+          return;
+        }
       }
 
+      console.log("start location update");
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      setLatitude(location.coords.latitude.toFixed(5));
+      setLongitude(location.coords.longitude.toFixed(5));
+      console.log("end location update");
     }
 
     getCurrentLocation();
   }, []);
-
-  let latitude = '0';
-  let longitude = '0';
-  
-  if (location && location.coords) {
-    latitude = location.coords.latitude.toFixed(5);
-    longitude = location.coords.longitude.toFixed(5);
-  }
 
   return (
     <View style={styles.container}>
