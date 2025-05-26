@@ -1,8 +1,12 @@
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
@@ -10,10 +14,9 @@
     }
   },
   "include": [
+    "src",
+    "app",
     "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "app/index.js"  
+    "**/*.tsx"
   ]
 }
