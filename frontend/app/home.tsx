@@ -1,36 +1,28 @@
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { useState, useEffect, SetStateAction } from 'react';
 import { useRouter } from 'expo-router';
-import * as Location from 'expo-location'
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [location, setLocation] : [Location.LocationObject|null, React.Dispatch<SetStateAction<Location.LocationObject|null>>] = useState<Location.LocationObject | null>(null);
   const [latitude, setLatitude] = useState('0')
   const [longitude, setLongitude] = useState('0')
 
   useEffect(() => {
-    async function getCurrentLocation() {
-      console.log("checking location permissions");
-      let perms = await Location.getForegroundPermissionsAsync();
-      if(perms.status !== 'granted'){
-        console.log("requesting location permissions");
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.warn("Location permission not granted!")
-          return;
+    if ('geolocation' in navigator) {
+      const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          setLatitude(position.coords.latitude.toFixed(5));
+          setLongitude(position.coords.longitude.toFixed(5));
+          console.log('Web location update:', position);
+        },
+        (error) => {
+          console.error('Web location error:', error);
         }
-      }
-
-      console.log("start location update");
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      setLatitude(location.coords.latitude.toFixed(5));
-      setLongitude(location.coords.longitude.toFixed(5));
-      console.log("end location update");
+      );
+      return () => navigator.geolocation.clearWatch(watchId);
+    } else {
+      console.warn('Geolocation not available in this browser.');
     }
-
-    getCurrentLocation();
   }, []);
 
   return (
