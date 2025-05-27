@@ -25,46 +25,43 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container">
-      <div className="logoutButtonContainer">
-        <button className="button" onClick={() => window.location.href = '/'}>Logout</button>
-      </div>
-
-      <div className="findButtonTextContainer">
-        <button className="button">Button 1: Find Nearby Study Groups</button>
-      </div>
-
-      <div className="createButtonTextContainer">
-        <button className="button">Button 2: Create Your Own Group</button>
-      </div>
-
-      <div className="coordinateTextContainer">
-        <div className="text">Your coordinates are:</div>
-        <div className="text">
-          Latitude: {latitude !== null ? latitude.toFixed(5) : 'Loading...'}
+    <div className="main-split-container">
+      <div className="left-section">
+        <div className="findButtonTextContainer">
+          <button className="button">Find Nearby Study Groups</button>
         </div>
-        <div className="text">
-          Longitude: {longitude !== null ? longitude.toFixed(5) : 'Loading...'}
+        <div className="createButtonTextContainer">
+          <button className="button">Create Your Own Group</button>
+        </div>
+        <div className="logoutButtonContainer">
+          <button className="button" onClick={() => window.location.href = '/'}>Logout</button>
         </div>
       </div>
-
-      {latitude !== null && longitude !== null && (
-        <div style={{ height: '300px', width: '100%', margin: '0 auto', maxWidth: 600 }}>
-          <MapContainer
-            center={[latitude, longitude]}
-            zoom={15}
-            style={{ height: '100%', width: '100%' }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={[latitude, longitude]}>
-              <Popup>You are here</Popup>
-            </Marker>
-          </MapContainer>
-        </div>
-      )}
+      <div className="right-section">
+        {latitude !== null && longitude !== null && (
+          <>
+            <div className="overlay-coordinates">
+              Latitude: {latitude.toFixed(5)} <br />
+              Longitude: {longitude.toFixed(5)}
+            </div>
+            <div style={{ height: '400px', width: '100%', maxWidth: 600 }}>
+              <MapContainer
+                center={[latitude, longitude]}
+                zoom={15}
+                style={{ height: '100%', width: '100%' }}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <Marker position={[latitude, longitude]}>
+                  <Popup>You are here</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
