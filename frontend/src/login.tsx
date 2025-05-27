@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import './login.css';
+import { useNavigate } from "react-router";
 
 export default function Login() {
     const [user, setUser] : [string, React.Dispatch<React.SetStateAction<string>>] = useState("");
     const defaultUsers = ["user1", "user2", "user3"];
+    let nav = useNavigate()
+
+    let goHome = function(){
+        nav('/home');
+    }
 
     return (
     <div className="container">
@@ -13,7 +19,7 @@ export default function Login() {
 
         <div className="loginButtonContainer">
             <div className="text">user: {user}</div>
-            <button className="button">Login</button>
+            <button className="button" onClick={goHome}>Login</button>
         </div>
     </div>
     );
