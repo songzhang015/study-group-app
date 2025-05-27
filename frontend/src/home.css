@@ -37,7 +37,8 @@ body {
 }
 
 .logoutButtonContainer {
-  margin-top: 72px;
+  position: absolute;
+  bottom: 100px;
 }
 
 .button {
