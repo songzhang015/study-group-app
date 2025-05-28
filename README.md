@@ -17,7 +17,8 @@ A location-based app for forming and finding study groups nearby for similar cou
 5. Website will be available at http://localhost:3000 once server has started.
 6. To turn off server, you may run `docker compose down` or manually shut it off in the Docker Desktop
 
-Old Instructions:
+- - - - -
+Old Instructions (If you are using Docker, you do not need to worry about this section for both frontend/backend):
 1. Install Node.js from https://nodejs.org/ which includes npm
 2. In the terminal, clone the github directory and cd into the project/frontend folder (make sure you are in the frontend folder)
 3. Run "npm install" inside the frontend folder
