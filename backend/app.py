@@ -27,22 +27,6 @@ if User.objects.count() == 0:
     seed_db()
 
 
-# Test Route
-"""
-@app.route('/users', methods=['GET'])
-def list_users():
-    users = User.objects()
-    return jsonify([
-        {
-            "_id": u._id,
-            "username": u.username,
-            "location": u.location['coordinates'] if u.location else None
-        }
-        for u in users
-    ])
-"""
-
-
 @app.route('/')
 def index():
     """Returns simple API status message"""
@@ -83,6 +67,21 @@ def login():
         }), 200
     else:
         return jsonify({"message": f"User '{username}' not found."}), 404
+
+
+
+# Test Route
+
+@app.route('/users', methods=['GET'])
+def list_users():
+    users = User.objects()
+    return jsonify([
+        { "username": u.username }
+        for u in users
+    ])
+
+
+
 
 @app.route('/users/<user_id>', methods=['GET'])
 def user_profile(user_id):
