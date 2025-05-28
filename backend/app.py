@@ -19,7 +19,7 @@ from db_models import User, StudyGroup
 from seeder import seed_db
 
 app = Flask(__name__)
-CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to  connect
+CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to connect
 
 # Connect to MongoDB
 db = os.getenv('db', 'mongodb://localhost:27017/studygroupapp')
