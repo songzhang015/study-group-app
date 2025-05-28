@@ -143,7 +143,7 @@ def study_group_collection():
     {
       "name": "Topic 1",
       "description": "Text",
-      "owner_id": "abc123",
+      "_id": "abc123",
       "max_members": 5
     }
     Response:
@@ -163,8 +163,8 @@ def study_group_collection():
         return jsonify(groups_list), 200
     elif request.method == 'POST':
         data = request.get_json()
-        owner_id = data.get('owner_id')
-        owner_user_object = User.objects.get(_id=owner_id)
+        _id = data.get('_id')
+        owner_user_object = User.objects.get(_id=_id)
         if not owner_user_object.current_study_group_id:
             study_group_location = owner_user_object.location
 
