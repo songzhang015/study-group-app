@@ -346,4 +346,4 @@ def study_group_members_remove(group_id, user_id):
     return jsonify({"message": "User removed from study group successfully."}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
