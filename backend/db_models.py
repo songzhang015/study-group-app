@@ -62,7 +62,7 @@ class StudyGroup(Document):
     # Maximum number of allowed members in the group. Does it even need a limit???
     max_members = IntField(default=10)
     # Whether the group is open to new members joining
-    is_open = BooleanField(default=False)
+    # is_open = BooleanField(default=False)
 
     #Lists of User references who have joined this study group???
     members = ListField(ReferenceField('User'))

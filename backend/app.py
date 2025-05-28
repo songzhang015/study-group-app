@@ -10,6 +10,7 @@ Authors: Derek Van Devender, Song Zhang
 
 import os
 from flask import Flask, jsonify, request
+import requests
 # from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
 from mongoengine import connect, DoesNotExist
 from db_models import User, StudyGroup
@@ -185,7 +186,7 @@ def study_group_collection():
             return jsonify({"message": f"User is already associated with a study group.",}), 409
         
 
-@app.route('/study-groups/<group_id>', methods=['GET', 'PATCH', 'DELETE'])
+@app.route('/study-groups/<group_id>', methods=['GET', 'PATCH'])
 def study_group_item(group_id):
     """Handles singular study group
 
@@ -201,7 +202,6 @@ def study_group_item(group_id):
           "longitude": 12.34567,
           "latitude": 12.34567
         },
-        "is_open": true,
         "max_members": 5,
         "current_members_count": 5,
         "members": [
@@ -220,12 +220,6 @@ def study_group_item(group_id):
     {
       "message": "Study group updated successfully."
     }
-    
-    DELETE: Deletes a study group
-    Response:
-    {
-      "message": "Study group deleted successfully."
-    }
     """
     try:
         group = StudyGroup.objects.get(_id=group_id)
@@ -238,7 +232,6 @@ def study_group_item(group_id):
             "description": group.description,
             "owner": str(group.owner.id),
             "location": group.location['coordinates'],
-            "is_open": group.is_open,
             "max_members": group.max_members,
         })
 
@@ -247,47 +240,12 @@ def study_group_item(group_id):
         # Update fields only if present in request
         group.name = data.get('name', group.name)
         group.description = data.get('description', group.description)
-        group.is_open = data.get('is_open', group.is_open)
         group.max_members = data.get('max_members', group.max_members)
 
         if 'location' in data:
             group.location = [data['location']['longitude'], data['location']['latitude']]  # Format: [lng, lat]
         group.save()
         return jsonify({"message": "Study group has been updated."})
-
-    elif request.method == 'DELETE':
-        all_members = list(group.members)
-        for member in all_members:
-            member.current_study_group_id = ""
-            member.save()
-        group.delete()
-        return jsonify({"message": "Study group has been deleted."})
-
-
-@app.route('/study-groups/<group_id>/status', methods=['PATCH'])
-def study_group_status(group_id):
-    """Modifies the broadcast status of study group
-
-    If active, shows up in list for users to see
-
-    Request:
-    {
-      "is_open": true
-    }
-    Response:
-    {
-      "message": "Study group status updated successfully."
-    }
-    """
-    try:
-        group = StudyGroup.objects.get(_id=group_id)
-    except DoesNotExist:
-        return jsonify({"error": "Study group not found."}), 404
-    data = request.get_json()
-    group.is_open = data.get('is_open', group.is_open)
-    group.save()
-    return jsonify({"message": "Study group status updated successfully."})
-
 
 @app.route('/study-groups/<group_id>/members/<user_id>', methods=['POST'])
 def study_group_members_add(group_id, user_id):
@@ -337,12 +295,12 @@ def study_group_members_remove(group_id, user_id):
         return jsonify({"error": "User not found."}), 404
     if user not in group.members:
         return jsonify({"message": "User is not a member of this study group."}), 404
-    if user_id == group.owner.id:
-        return jsonify({"message": "The owner cannot leave the study group, try deleting the group instead."}), 403
     group.members.remove(user)
     group.save()
     user.current_study_group_id = ""
     user.save()
+    if not group.members:
+        group.delete()
     return jsonify({"message": "User removed from study group successfully."}), 200
 
 if __name__ == '__main__':
