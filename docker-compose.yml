@@ -1,0 +1,39 @@
+# Configuration file for composing project using Docker
+#
+# Interacts and builds the system using the Dockerfiles in
+# the frontend and backend folders.
+#
+# Author: Song Zhang
+# Last Modified: 05/07/2025
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      db: mongodb://mongodb:27017/studygroupapp
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

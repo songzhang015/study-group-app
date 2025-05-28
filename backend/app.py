@@ -8,6 +8,7 @@ Used for storing/retrieving data between app and MongoDB
 Authors: Derek Van Devender, Song Zhang
 """
 
+import os
 from flask import Flask, jsonify, request
 # from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
 from mongoengine import connect, DoesNotExist
@@ -17,8 +18,9 @@ from seeder import seed_db
 app = Flask(__name__)
 # CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
 
-# Connect to MongoDB (local instance)
-connect(db='flask_database', host='localhost', port=27017)
+# Connect to MongoDB
+db = os.getenv('db', 'mongodb://localhost:27017/studygroupapp')
+connect(host=db)
 
 # Populates the database with 3 default users IF database is empty
 if User.objects.count() == 0:
