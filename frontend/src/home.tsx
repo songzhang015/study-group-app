@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useNavigate, useLocation } from "react-router";
 import './home.css';
 import 'leaflet/dist/leaflet.css';
 
 export default function Home() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
+  const [username, setUsername] = useState<string>("");
+
+  const location = useLocation();
+  const data = location.state;
+
+  useEffect(() => {
+    if(data != null){
+      console.log("username: "+data.username)
+      setUsername(data.username);
+    }
+  }, [data]);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -24,9 +36,12 @@ export default function Home() {
     }
   }, []);
 
+  //<div className="text">Username: {username}</div>
+
   return (
     <div className="main-split-container">
       <div className="left-section">
+        <div className="text">Username: {username}</div>
         <div className="findButtonTextContainer">
           <button className="button">Find Nearby Study Groups</button>
         </div>
