@@ -10,13 +10,13 @@ Authors: Derek Van Devender, Song Zhang
 
 import os
 from flask import Flask, jsonify, request
-# from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
+from flask_cors import CORS # Might have to "pip install flask-cors" to use this
 from mongoengine import connect, DoesNotExist
 from db_models import User, StudyGroup
 from seeder import seed_db
 
 app = Flask(__name__)
-# CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect... but I am NOT SURE yet.
+CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to better connect
 
 # Connect to MongoDB
 db = os.getenv('db', 'mongodb://localhost:27017/studygroupapp')
@@ -27,7 +27,7 @@ if User.objects.count() == 0:
     seed_db()
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """Returns simple API status message"""
     return jsonify({"message": "Flask API is running"})
