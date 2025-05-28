@@ -10,7 +10,6 @@ Authors: Derek Van Devender, Song Zhang
 
 import os
 from flask import Flask, jsonify, request
-import requests
 # from flask_cors import CORS # I am NOT SURE, if this is needed yet...might have to "pip install flask-cors" to use this
 from mongoengine import connect, DoesNotExist
 from db_models import User, StudyGroup
