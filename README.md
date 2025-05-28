@@ -8,7 +8,15 @@ A location-based app for forming and finding study groups nearby for similar cou
 - Song Zhang
 
 ## Installation Instructions
+*NEW* Docker Installation Instructions:
+1. Install Docker if it is not installed yet (https://docs.docker.com/get-started/get-docker/)
+2. Once Docker has been installed, open the Docker Desktop (app)
+3. `cd` into the repository's root directory (not frontend/backend)
+4. Run `docker compose up -d --build` to run the server.
+     - If you make any changes, run the same command.
+6. To turn off server, you may run `docker compose down` or manually shut it off in the Docker Desktop
 
+Old Instructions:
 1. Install Node.js from https://nodejs.org/ which includes npm
 2. In the terminal, clone the github directory and cd into the project/frontend folder (make sure you are in the frontend folder)
 3. Run "npm install" inside the frontend folder
