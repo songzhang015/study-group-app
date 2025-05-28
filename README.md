@@ -14,6 +14,7 @@ A location-based app for forming and finding study groups nearby for similar cou
 3. `cd` into the repository's root directory (not frontend/backend)
 4. Run `docker compose up -d --build` to run the server.
      - If you make any changes, run the same command.
+5. Website will be available at http://localhost:3000 once server has started.
 6. To turn off server, you may run `docker compose down` or manually shut it off in the Docker Desktop
 
 Old Instructions:
