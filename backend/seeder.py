@@ -1,8 +1,16 @@
 """
-Seeder file to populate the database with 3 default users
-Ran automatically when server is started, but will only populate IF database is empty
+Seeder file to populate the database with 3 default users.
+
+Ran automatically when server is started, but will only populate IF
+the database is empty. Essentially, test users for utilizing the prototype
+and will not be used when the app finishes development.
+
+Provides just the barebones information to satisfy the schemas in "db_models.py"
+located in the same directory as a canvas for users and developers to test
+the app's functionality.
 
 Author: Derek Van Devender
+Last Modified: 05/27/2025
 """
 
 from db_models import User

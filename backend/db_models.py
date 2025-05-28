@@ -1,10 +1,14 @@
 """
-MongoDB object schemas for CS 422 Project 2: Study Group App.
+MongoDB object schemas for CS 422 Project 2: Study Group App
 
-This file defines MongoEngine models for storing users and study groups,
+This file defines MongoEngine models for users and study groups
 with support for geolocation (latitude/longitude).
 
+These models are the schemas or outlines of the user and study group
+modules as seen in the Software Design Specifications (Software Modules).
+
 Author: Derek Van Devender
+Last Modified: 05/27/2025
 """
 
 from mongoengine import *
@@ -25,7 +29,6 @@ class User(Document):
     username = StringField(required=True, unique=True)
     location = PointField(required=False)  # [longitude, latitude]
     current_study_group_id = StringField(required=False)
-    # joined_groups = ListField(ReferenceField('StudyGroup')) # Going to comment this out for now, to match app.py
 
 
 class StudyGroup(Document):
