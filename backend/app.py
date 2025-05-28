@@ -1,11 +1,14 @@
 """
-Server backend code made using Flask
+The Backend Server for CS 422 Project 2: Study Group App
 
-Run using "python3 app.py" while in the backend directory
+This file contains all the API routes designed using RESTful specifications.
 
-Used for storing/retrieving data between app and MongoDB
+These API routes allow the user interface of the application to communicate
+with our database (MongoDB) by sending and receiving requests to and from
+the server.
 
 Authors: Derek Van Devender, Song Zhang
+Last Modified: 05/27/2025
 """
 
 import os

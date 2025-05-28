@@ -7,6 +7,8 @@ A location-based app for forming and finding study groups nearby for similar cou
 - Sawyer Christensen
 - Song Zhang
 
+### Last Modified: 05/28/2025
+
 ## Installation Instructions
 *NEW* Docker Installation Instructions:
 1. Install Docker if it is not installed yet (https://docs.docker.com/get-started/get-docker/)

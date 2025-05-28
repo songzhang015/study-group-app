@@ -1,10 +1,14 @@
 # Configuration file for composing project using Docker
 #
-# Interacts and builds the system using the Dockerfiles in
+# Interacts and builds the application using the Dockerfiles in
 # the frontend and backend folders.
 #
+# The Dockerfiles (and this process) are vital in setting up
+# a pre-built environment for testing and using the app
+# without having to download external programs.
+#
 # Author: Song Zhang
-# Last Modified: 05/07/2025
+# Last Modified: 05/27/2025
 
 services:
   backend:
