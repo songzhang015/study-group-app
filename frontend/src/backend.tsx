@@ -61,7 +61,6 @@ export namespace Backend {
     }
     export async function FetchUsers() : Promise<string[]> {
         const fullResponse = await fetch(GetApi() + '/users');
-        console.log(await fullResponse.text());
         const responseJson = await fullResponse.json();
         let userDataArray = responseJson as {username: string}[];
         let userList = [] as string[];
