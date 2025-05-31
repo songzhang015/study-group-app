@@ -27,7 +27,6 @@ class User(Document):
     meta = {'collection': 'users'}
     _id = StringField(primary_key=True, default=new_obj_id)
     username = StringField(required=True, unique=True)
-    location = PointField(required=False)  # [longitude, latitude]
     current_study_group_id = StringField(required=False)
 
 

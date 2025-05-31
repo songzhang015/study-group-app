@@ -14,7 +14,7 @@ Last Modified: 05/27/2025
 import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS # Might have to "pip install flask-cors" to use this
-from mongoengine import connect, DoesNotExist
+from mongoengine import connect, DoesNotExist, PointField
 from db_models import User, StudyGroup
 from seeder import seed_db
 
@@ -141,6 +141,10 @@ def study_group_collection():
       "description": "Text",
       "_id": "abc123",
       "max_members": 5
+      "location": {
+          "longitude": 12.34567,
+          "latitude": 12.34567
+        },
     }
     Response:
     {
@@ -163,10 +167,11 @@ def study_group_collection():
         return jsonify(groups_list), 200
     elif request.method == 'POST':
         data = request.get_json()
-        _id = data.get('_id')
+        _id = data.get('_id') # ID of user to add them to group
         owner_user_object = User.objects.get(_id=_id)
+        group_location = data.get('location')
         if not owner_user_object.current_study_group_id:
-            study_group_location = owner_user_object.location
+            study_group_location = PointField(coordinates=group_location)
 
             new_group = StudyGroup(
                 name=data.get('name'),
