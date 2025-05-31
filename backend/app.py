@@ -107,7 +107,7 @@ def user_profile(user_id):
 
 @app.route('/study-groups', methods=['GET', 'POST'])
 def study_group_collection():
-    """Handles collection of study groups
+    """Handles collection of study groups, note Location is [longitude, latitude]
     
     GET: Lists all study groups
     Response:
@@ -117,20 +117,13 @@ def study_group_collection():
         "name": "Topic 1",
         "current_members_count": "5",
         "max_members": "5",
-        "location": {
-          "longitude": 12.34567,
-          "latitude": 12.34567
-        },
-      },
+        "location": [12.34567, 12.34567]
       {
         "_id": "abc123",
         "name": "Topic 2",
         "current_members_count": "5",
         "max_members": "5",
-        "location": {
-          "longitude": 12.34567,
-          "latitude": 12.34567
-        }
+        "location": [12.34567, 12.34567]
       }
     ]
     
@@ -140,11 +133,8 @@ def study_group_collection():
       "name": "Topic 1",
       "description": "Text",
       "_id": "abc123",
-      "max_members": 5
-      "location": {
-          "longitude": 12.34567,
-          "latitude": 12.34567
-        },
+      "max_members": 5,
+      "location": [12.34567, 12.34567]
     }
     Response:
     {
@@ -171,13 +161,11 @@ def study_group_collection():
         owner_user_object = User.objects.get(_id=_id)
         group_location = data.get('location')
         if not owner_user_object.current_study_group_id:
-            study_group_location = PointField(coordinates=group_location)
-
             new_group = StudyGroup(
                 name=data.get('name'),
                 description=data.get('description'),
                 owner=owner_user_object,
-                location=study_group_location,
+                location=group_location,
                 max_members=data.get('max_members')
             )
             new_group.save()
@@ -203,10 +191,7 @@ def study_group_item(group_id):
         "name": "Topic 1",
         "description": "Text",
         "owner_id": "abc123",
-        "location": {
-          "longitude": 12.34567,
-          "latitude": 12.34567
-        },
+        "location": [12.34567, 12.34567],
         "max_members": 5,
         "current_members_count": 5,
         "members": [
