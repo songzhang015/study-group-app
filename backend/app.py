@@ -71,20 +71,14 @@ def login():
     else:
         return jsonify({"message": f"User '{username}' not found."}), 404
 
-
-
-# Test Route
-
 @app.route('/users', methods=['GET'])
 def list_users():
+    """Gets a list of all users"""
     users = User.objects()
     return jsonify([
         { "username": u.username }
         for u in users
     ])
-
-
-
 
 @app.route('/users/<user_id>', methods=['GET'])
 def user_profile(user_id):
@@ -133,10 +127,22 @@ def study_group_collection():
       {
         "_id": "abc123",
         "name": "Topic 1",
+        "current_members_count": "5",
+        "max_members": "5",
+        "location": {
+          "longitude": 12.34567,
+          "latitude": 12.34567
+        },
       },
       {
         "_id": "abc123",
         "name": "Topic 2",
+        "current_members_count": "5",
+        "max_members": "5",
+        "location": {
+          "longitude": 12.34567,
+          "latitude": 12.34567
+        }
       }
     ]
     
@@ -160,7 +166,10 @@ def study_group_collection():
         for group in groups:
             groups_list.append({
                 "_id": str(group._id),
-                "name": group.name
+                "name": group.name,
+                "current_members_count": len(group.members),
+                "max_members": group.max_members,
+                "location": group.location['coordinates']
             })
         return jsonify(groups_list), 200
     elif request.method == 'POST':
@@ -227,6 +236,7 @@ def study_group_item(group_id):
     except DoesNotExist:
         return jsonify({"message": "Study group not found."}), 404
     if request.method == 'GET':
+        member_ids = [str(member._id) for member in group.members]
         return jsonify({
             "_id": group._id,
             "name": group.name,
@@ -234,6 +244,8 @@ def study_group_item(group_id):
             "owner": str(group.owner.id),
             "location": group.location['coordinates'],
             "max_members": group.max_members,
+            "current_members_count": len(group.members),
+            "members": member_ids
         })
 
     elif request.method == 'PATCH':
