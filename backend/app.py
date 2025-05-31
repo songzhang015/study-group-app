@@ -204,7 +204,8 @@ def study_group_item(group_id):
     PATCH: Updates an existing study group's details
     Request:
     {
-      "description": "Updated text"
+      "description": "Updated text",
+      "location": [12.34567, 12.34567]
     }
     Response:
     {
@@ -236,7 +237,8 @@ def study_group_item(group_id):
         group.max_members = data.get('max_members', group.max_members)
 
         if 'location' in data:
-            group.location = [data['location']['longitude'], data['location']['latitude']]  # Format: [lng, lat]
+            new_location = data.get('location')
+            group.location = new_location
         group.save()
         return jsonify({"message": "Study group has been updated."})
 
