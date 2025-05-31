@@ -35,7 +35,7 @@ export default function Home() {
         console.log(
           selected.subject 
           + ", members: "+selected.member_count + ", " + selected.max_member_count
-          + ", location: " +selected.latitude + ", " + selected.longitude
+          + ", location: " +selected.location.latitude + ", " + selected.location.longitude
         );
       }
     }
@@ -51,6 +51,11 @@ export default function Home() {
   }, [data]);
 
   useEffect(() => {
+    //TODO remove the example group
+    if(user != null && latitude != null && longitude != null){
+      Backend.CreateGroup(user, "Example Group - " + user.name, 3, latitude, longitude);
+    }
+
     fetchGroups();
   }, []);
 

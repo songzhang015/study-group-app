@@ -11,8 +11,7 @@ export type StudyGroup = {
     subject : string,
     member_count : number,
     max_member_count : number
-    latitude : number,
-    longitude : number,
+    location: {latitude: number, longitude: number}
 }
 
 //some functions for internal use
@@ -43,7 +42,9 @@ type BackendUser = {
 type BackendGroupCreation = {
     id: string,
     name: string,
+    description: string,
     max_members: number,
+    location: number[]
 }
 
 type BackendGroupSummary = {
@@ -51,10 +52,7 @@ type BackendGroupSummary = {
     name: string,
     current_members_count: number,
     max_members: number,
-    location: {
-        latitude: number,
-        longitude: number
-    }
+    location: number[]
 }
 
 export namespace Backend {
@@ -63,6 +61,7 @@ export namespace Backend {
     }
     export async function FetchUsers() : Promise<string[]> {
         const fullResponse = await fetch(GetApi() + '/users');
+        console.log(await fullResponse.text());
         const responseJson = await fullResponse.json();
         let userDataArray = responseJson as {username: string}[];
         let userList = [] as string[];
@@ -103,8 +102,10 @@ export namespace Backend {
                     subject: responseGroup.name,
                     member_count: responseGroup.current_members_count,
                     max_member_count: responseGroup.max_members,
-                    latitude: responseGroup.location.latitude,
-                    longitude: responseGroup.location.longitude
+                    location: {
+                        latitude: responseGroup.location[0],
+                        longitude: responseGroup.location[1]
+                    }
                 } as StudyGroup;
                 groups.push(group);
             }
@@ -118,20 +119,23 @@ export namespace Backend {
         }
     }
 
-    export async function CreateGroup(user:User, subject:string, max_members:number, latitude: number, longitude:number) : Promise<boolean> {
+    export async function CreateGroup(user:User, subject:string, max_members:number, latitude: number, longitude:number) : Promise<string | null> {
         let url:string = GetApi() + '/study-groups'
         let newGroup = {
-            
+            id: user.id,
+            name: subject,
+            description: "",
+            max_members: max_members,
+            location: [latitude, longitude]
         } as BackendGroupCreation
         
-        //TODO post new study group
-        let result = {status: 400};
-        
+        let result = await post_json(url, newGroup);
+        let resultJson = await result.json();
         if (result.status == 201){
-            return true;
+            return (resultJson as {group_id:string}).group_id;
         }
         else{
-            return false;
+            return null;
         }
     }
 
