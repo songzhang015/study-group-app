@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate, useLocation } from "react-router";
+import { User, Backend } from './backend';
 import './home.css';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -17,15 +18,17 @@ L.Icon.Default.mergeOptions({
 export default function Home() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
-  const [username, setUsername] = useState<string>("");
+  const [user, setUser] = useState<User | null>(null);
 
   const location = useLocation();
   const data = location.state;
 
   useEffect(() => {
     if(data != null){
-      console.log("username: "+data.username)
-      setUsername(data.username);
+      setUser(data.user);
+      let dataUser = data.user as User;
+      console.log("user name: "+ dataUser.name)
+      console.log("user id: "+ dataUser.id)
     }
   }, [data]);
 
@@ -52,7 +55,7 @@ export default function Home() {
   return (
     <div className="main-split-container">
       <div className="left-section">
-        <div className="text">Username: {username}</div>
+        <div className="text">Username: {user?.name}</div>
         <div className="findButtonTextContainer">
           <button className="button">Find Nearby Study Groups</button>
         </div>
