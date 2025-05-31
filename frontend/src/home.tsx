@@ -34,7 +34,7 @@ export default function Home() {
         let selected = studyGroups[i];
         console.log(
           selected.subject 
-          + ", members: "+selected.member_count + ", " + selected.max_member_count
+          + ", members: "+selected.member_count + "/" + selected.max_member_count
           + ", location: " +selected.location.latitude + ", " + selected.location.longitude
         );
       }
@@ -52,12 +52,16 @@ export default function Home() {
 
   useEffect(() => {
     //TODO remove the example group
-    if(user != null && latitude != null && longitude != null){
-      Backend.CreateGroup(user, "Example Group - " + user.name, 3, latitude, longitude);
+    if(user != null){
+      console.log("creating group...");
+      Backend.CreateGroup(user, "Example Group - " + user.name, 3, 12, 15);
+    }
+    else{
+      console.log("user or location error");
     }
 
     fetchGroups();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if ('geolocation' in navigator) {

@@ -40,7 +40,7 @@ type BackendUser = {
 }
 
 type BackendGroupCreation = {
-    id: string,
+    _id: string,
     name: string,
     description: string,
     max_members: number,
@@ -48,7 +48,7 @@ type BackendGroupCreation = {
 }
 
 type BackendGroupSummary = {
-    id: string,
+    _id: string,
     name: string,
     current_members_count: number,
     max_members: number,
@@ -97,7 +97,7 @@ export namespace Backend {
             for(let i = 0; i < responseArray.length; i++){
                 let responseGroup = responseArray[i] as BackendGroupSummary;
                 let group = {
-                    id: responseGroup.id,
+                    id: responseGroup._id,
                     subject: responseGroup.name,
                     member_count: responseGroup.current_members_count,
                     max_member_count: responseGroup.max_members,
@@ -121,7 +121,7 @@ export namespace Backend {
     export async function CreateGroup(user:User, subject:string, max_members:number, latitude: number, longitude:number) : Promise<string | null> {
         let url:string = GetApi() + '/study-groups'
         let newGroup = {
-            id: user.id,
+            _id: user.id,
             name: subject,
             description: "",
             max_members: max_members,
