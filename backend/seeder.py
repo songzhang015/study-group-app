@@ -23,15 +23,12 @@ def seed_db():
     users = [
         {
             "username": "Alice",
-            "location": {"type": "Point", "coordinates": [-122.4194, 37.7749]},  # San Francisco
         },
         {
             "username": "Bob",
-            "location": {"type": "Point", "coordinates": [-118.2437, 34.0522]},  # Los Angeles
         },
         {
             "username": "Charlie",
-            "location": {"type": "Point", "coordinates": [-73.9352, 40.7306]},   # New York
         }
     ]
 
@@ -39,7 +36,6 @@ def seed_db():
     for u in users:
         user = User(
             username=u['username'],
-            location=u['location'],
             current_study_group_id=""
         )
         user.save()
