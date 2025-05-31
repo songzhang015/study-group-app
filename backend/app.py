@@ -89,10 +89,6 @@ def user_profile(user_id):
       "user": {
         "_id": "abc123",
         "username": "user1",
-        "location": {
-          "longitude": 12.34567,
-          "latitude": 12.34567
-        },
         "current_study_group_id": "abc123"
       }
     }
@@ -101,18 +97,10 @@ def user_profile(user_id):
         user = User.objects.get(_id=user_id)
     except DoesNotExist:
         return jsonify({"message": "User not found."}), 404
-    loc_data = None
-    if user.location:
-        # MongoDB stores longitude first
-        loc_data = {
-            "longitude": user.location['coordinates'][0],
-            "latitude": user.location['coordinates'][1]
-        }
     return jsonify({
         "user": {
             "id": str(user._id),
             "username": user.username,
-            "location": loc_data,
             "current_study_group_id": user.current_study_group_id
         }
     }), 200
@@ -157,6 +145,7 @@ def study_group_collection():
     Response:
     {
       "message": "Study group created successfully.",
+      "group_id": "abc123"
     }
     """
     if request.method == 'GET':
@@ -191,7 +180,8 @@ def study_group_collection():
             new_group.save()
             owner_user_object.current_study_group_id = new_group.id
             owner_user_object.save()
-            return jsonify({"message": f"Study group created successfully.",}), 201
+            return jsonify({"message": f"Study group created successfully.",
+                            "group_id": str(new_group.id)}), 201
         else:
             return jsonify({"message": f"User is already associated with a study group.",}), 409
         
