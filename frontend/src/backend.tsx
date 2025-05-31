@@ -88,6 +88,31 @@ export namespace Backend {
         }
     }
 
+    export async function GetGroup(user: User) : Promise<StudyGroup | null> {
+        const userResponse = await fetch(GetApi() + '/users/' + user.id);
+        const userJson = await userResponse.json();
+        let userData = userJson as {user: {current_study_group_id: string}};
+        console.log(JSON.stringify(userJson));
+        console.log(userData.user.current_study_group_id);
+        if(userData.user.current_study_group_id){
+            const groupResponse = await fetch(GetApi() + '/study-groups/' + userData.user.current_study_group_id);
+            const groupJson = await groupResponse.json();
+            let responseGroup = groupJson as BackendGroupSummary;
+            let group = {
+                        id: responseGroup._id,
+                        subject: responseGroup.name,
+                        member_count: responseGroup.current_members_count,
+                        max_member_count: responseGroup.max_members,
+                        location: {
+                            latitude: responseGroup.location[1],
+                            longitude: responseGroup.location[0]
+                        }
+                    } as StudyGroup;
+            return group;
+        }
+        return null;
+    }
+
     export async function FetchGroups() : Promise<StudyGroup[] | null> {
         try{
             const response = await fetch(GetApi() + '/study-groups');
@@ -102,8 +127,8 @@ export namespace Backend {
                     member_count: responseGroup.current_members_count,
                     max_member_count: responseGroup.max_members,
                     location: {
-                        latitude: responseGroup.location[0],
-                        longitude: responseGroup.location[1]
+                        latitude: responseGroup.location[1],
+                        longitude: responseGroup.location[0]
                     }
                 } as StudyGroup;
                 groups.push(group);
@@ -125,7 +150,7 @@ export namespace Backend {
             name: subject,
             description: "",
             max_members: max_members,
-            location: [latitude, longitude]
+            location: [longitude, latitude]
         } as BackendGroupCreation
         
         let result = await post_json(url, newGroup);

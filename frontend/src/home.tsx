@@ -20,15 +20,16 @@ export default function Home() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [groups, setGroups] = useState<StudyGroup[] | null>(null);
-  //const [selectedGroup, setSelectedGroup] = useState<StudyGroup | null>(null);
+  const [currentGroup, setCurrentGroup] = useState<StudyGroup | null>(null);
 
-  const location = useLocation();
-  const data = location.state;
+  const reactLocation = useLocation();
+  const data = reactLocation.state;
 
   //TODO: call from a refresh button of some kind
-  async function fetchGroups() {
+  async function FetchGroups() {
     let studyGroups = await Backend.FetchGroups();
     setGroups(studyGroups);
+    console.log("fetched study groups:");
     if(studyGroups != null){
       for(let i=0;i<studyGroups.length;i++){
         let selected = studyGroups[i];
@@ -41,6 +42,23 @@ export default function Home() {
     }
   }
 
+  async function GetCurrentGroup(){
+    if(user != null){
+      let userGroup = await Backend.GetGroup(user);
+      setCurrentGroup(userGroup);
+      if(userGroup != null){
+        console.log("user group: "+userGroup.subject);
+      }
+      else{
+        console.log("no current user group");
+      }
+    }
+  }
+
+  useEffect(() => {
+    GetCurrentGroup();
+  }, [user])
+
   useEffect(() => {
     if(data != null){
       setUser(data.user);
@@ -52,21 +70,22 @@ export default function Home() {
 
   useEffect(() => {
     //TODO remove the example group
-    if(user != null){
+    if(user != null && latitude != null && longitude != null){
       console.log("creating group...");
-      Backend.CreateGroup(user, "Example Group - " + user.name, 3, 12, 15);
+      Backend.CreateGroup(user, "Example Group - " + user.name, 3, latitude, longitude);
     }
     else{
       console.log("user or location error");
     }
 
-    fetchGroups();
-  }, [user]);
+    FetchGroups();
+  }, [user, latitude, longitude]);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
       const watchId = navigator.geolocation.watchPosition(
         (position) => {
+          console.log("location updated");
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
         },
