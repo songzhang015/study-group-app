@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useNavigate, useLocation } from "react-router";
-import { User, Backend } from './backend';
+import { User, Backend, StudyGroup } from './backend';
 import './home.css';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -19,9 +19,27 @@ export default function Home() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [groups, setGroups] = useState<StudyGroup[] | null>(null);
+  //const [selectedGroup, setSelectedGroup] = useState<StudyGroup | null>(null);
 
   const location = useLocation();
   const data = location.state;
+
+  //TODO: call from a refresh button of some kind
+  async function fetchGroups() {
+    let studyGroups = await Backend.FetchGroups();
+    setGroups(studyGroups);
+    if(studyGroups != null){
+      for(let i=0;i<studyGroups.length;i++){
+        let selected = studyGroups[i];
+        console.log(
+          selected.subject 
+          + ", members: "+selected.member_count + ", " + selected.max_member_count
+          + ", location: " +selected.latitude + ", " + selected.longitude
+        );
+      }
+    }
+  }
 
   useEffect(() => {
     if(data != null){
@@ -31,6 +49,10 @@ export default function Home() {
       console.log("user id: "+ dataUser.id)
     }
   }, [data]);
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -48,9 +70,6 @@ export default function Home() {
       console.warn('Geolocation not available in this browser.');
     }
   }, []);
-
-
-  //<div className="text">Username: {username}</div>
 
   return (
     <div className="main-split-container">
