@@ -241,6 +241,12 @@ export default function Home() {
                 <Marker position={[latitude, longitude]}>
                   <Popup>You are here</Popup>
                 </Marker>
+                {(!currentGroup && groups) && groups.map(group => (
+                    <Marker position={[group.location.latitude, group.location.longitude]}>
+                      <Popup>{group.subject}</Popup>
+                    </Marker>
+                  ))
+                }
               </MapContainer>
             </div>
           </>
