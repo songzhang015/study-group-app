@@ -148,6 +148,7 @@ export default function Home() {
             <div className = "text">Location: {currentGroup.location.latitude}, {currentGroup.location.longitude}</div>
             <button className="button" onClick={async () => {
               await LeaveCurrentGroup();
+              await FetchGroups();
             }}>
               Leave group
             </button>
