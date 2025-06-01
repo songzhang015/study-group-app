@@ -55,6 +55,21 @@ type BackendGroupSummary = {
     location: number[]
 }
 
+function ParseGroup(json:any) : StudyGroup {
+    let responseGroup = json as BackendGroupSummary;
+    let group = {
+                id: responseGroup._id,
+                subject: responseGroup.name,
+                member_count: responseGroup.current_members_count,
+                max_member_count: responseGroup.max_members,
+                location: {
+                    latitude: responseGroup.location[1],
+                    longitude: responseGroup.location[0]
+                }
+            } as StudyGroup;
+    return group;
+}
+
 export namespace Backend {
     export function GetApi() : string{
         return api;
@@ -97,17 +112,7 @@ export namespace Backend {
         if(userData.user.current_study_group_id){
             const groupResponse = await fetch(GetApi() + '/study-groups/' + userData.user.current_study_group_id);
             const groupJson = await groupResponse.json();
-            let responseGroup = groupJson as BackendGroupSummary;
-            let group = {
-                        id: responseGroup._id,
-                        subject: responseGroup.name,
-                        member_count: responseGroup.current_members_count,
-                        max_member_count: responseGroup.max_members,
-                        location: {
-                            latitude: responseGroup.location[1],
-                            longitude: responseGroup.location[0]
-                        }
-                    } as StudyGroup;
+            let group = ParseGroup(groupJson);
             return group;
         }
         return null;
@@ -120,17 +125,7 @@ export namespace Backend {
             const responseArray = responseJson as object[];
             let groups = [] as StudyGroup[];
             for(let i = 0; i < responseArray.length; i++){
-                let responseGroup = responseArray[i] as BackendGroupSummary;
-                let group = {
-                    id: responseGroup._id,
-                    subject: responseGroup.name,
-                    member_count: responseGroup.current_members_count,
-                    max_member_count: responseGroup.max_members,
-                    location: {
-                        latitude: responseGroup.location[1],
-                        longitude: responseGroup.location[0]
-                    }
-                } as StudyGroup;
+                let group = ParseGroup(responseArray[i]);
                 groups.push(group);
             }
             return groups;
@@ -143,7 +138,7 @@ export namespace Backend {
         }
     }
 
-    export async function CreateGroup(user:User, subject:string, max_members:number, latitude: number, longitude:number) : Promise<string | null> {
+    export async function CreateGroup(user:User, subject:string, max_members:number, latitude: number, longitude:number) : Promise<StudyGroup | null> {
         let url:string = GetApi() + '/study-groups'
         let newGroup = {
             _id: user.id,
@@ -156,7 +151,11 @@ export namespace Backend {
         let result = await post_json(url, newGroup);
         let resultJson = await result.json();
         if (result.status == 201){
-            return (resultJson as {group_id:string}).group_id;
+            let id = (resultJson as {group_id:string}).group_id;
+            let groupResult = await fetch(url + '/' + id);
+            let groupJson = await groupResult.json();
+            let group = ParseGroup(groupJson);
+            return group;
         }
         else{
             return null;

@@ -22,6 +22,9 @@ export default function Home() {
   const [groups, setGroups] = useState<StudyGroup[] | null>(null);
   const [currentGroup, setCurrentGroup] = useState<StudyGroup | null>(null);
 
+  //TODO: UI buttons should change selected group
+  const [selectedGroup, setSelectedGroup] = useState<StudyGroup | null>(null);
+
   const reactLocation = useLocation();
   const data = reactLocation.state;
 
@@ -42,7 +45,7 @@ export default function Home() {
     }
   }
 
-  async function GetCurrentGroup(){
+  async function FetchCurrentGroup(){
     if(user != null){
       let userGroup = await Backend.GetGroup(user);
       setCurrentGroup(userGroup);
@@ -55,8 +58,30 @@ export default function Home() {
     }
   }
 
+  async function CreateAndJoinGroup(subject: string, max_members: number){
+    if(user != null && latitude != null && longitude != null){
+      let newGroup = await Backend.CreateGroup(user, subject, max_members, latitude, longitude);
+      if(newGroup != null){
+        setCurrentGroup(newGroup);
+        return true;
+      }
+      return false;
+    }
+  }
+
+  async function JoinSelectedGroup(){
+    if(user != null && selectedGroup != null){
+      await Backend.JoinGroup(user, selectedGroup);
+    }
+  }
+  async function LeaveCurrentGroup(){
+    if(user != null && currentGroup != null){
+      await Backend.LeaveGroup(user, currentGroup);
+    }
+  }
+
   useEffect(() => {
-    GetCurrentGroup();
+    FetchCurrentGroup();
   }, [user])
 
   useEffect(() => {
@@ -69,15 +94,6 @@ export default function Home() {
   }, [data]);
 
   useEffect(() => {
-    //TODO remove the example group
-    if(user != null && latitude != null && longitude != null){
-      console.log("creating group...");
-      Backend.CreateGroup(user, "Example Group - " + user.name, 3, latitude, longitude);
-    }
-    else{
-      console.log("user or location error");
-    }
-
     FetchGroups();
   }, [user, latitude, longitude]);
 
