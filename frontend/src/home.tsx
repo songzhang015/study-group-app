@@ -30,6 +30,8 @@ export default function Home() {
   const [newGroupMaxMembers, setNewGroupMaxMembers] = useState(5);
   const [joinGroup, setJoinGroup] = useState(false);
 
+  const [address, setAddress] = useState<string>("");
+
   const reactLocation = useLocation();
   const data = reactLocation.state;
 
@@ -85,11 +87,28 @@ export default function Home() {
       }
     }
   }
+  
   async function LeaveCurrentGroup(){
     if(user != null && currentGroup != null){
       if(await Backend.LeaveGroup(user, currentGroup)){
         setCurrentGroup(null);
       }
+    }
+  }
+
+  async function getAddressFromCoords(lat: number, lon: number): Promise<string> {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+    );
+    const data = await response.json();
+    const houseNumber = data.address?.house_number || "";
+    const road = data.address?.road || "";
+    if (houseNumber && road) {
+      return `${houseNumber} ${road}`;
+    } else if (road) {
+      return road;
+    } else {
+      return "Unknown location";
     }
   }
 
@@ -137,15 +156,26 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (currentGroup) {
+      getAddressFromCoords(
+        currentGroup.location.latitude,
+        currentGroup.location.longitude
+      ).then(setAddress);
+    }
+  }, [currentGroup]);
+
   return (
     <div className="main-split-container">
       <div className="left-section">
-        <div className="text">Username: {user?.name}</div>
+        <div className="text">User: {user?.name}</div>
         {currentGroup ? (
           <div className = "inGroupContainer">
-            <div className = "text">Current study group: {currentGroup.subject}</div>
+            <div className = "text">Current Study Group: {currentGroup.subject}</div>
             <div className = "text">Members: {currentGroup.member_count} / {currentGroup.max_member_count}</div>
-            <div className = "text">Location: {currentGroup.location.latitude}, {currentGroup.location.longitude}</div>
+            <div className="text">
+              {address && <span>Location: {address}</span>}
+            </div>
             <button className="button" onClick={async () => {
               await LeaveCurrentGroup();
               await FetchGroups();

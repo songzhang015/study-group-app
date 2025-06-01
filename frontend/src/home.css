@@ -37,8 +37,12 @@ body {
 }
 
 .inGroupContainer {
-  margin-top: 48px;
-  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* horizontal centering */
+  justify-content: center;  /* vertical centering if you want */
+  margin: 0 auto;
+  line-height: 1.5;
 }
 
 .logoutButtonContainer {
