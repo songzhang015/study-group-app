@@ -103,7 +103,7 @@ export namespace Backend {
         }
     }
 
-    export async function GetGroup(user: User) : Promise<StudyGroup | null> {
+    export async function GetUserGroup(user: User) : Promise<StudyGroup | null> {
         const userResponse = await fetch(GetApi() + '/users/' + user.id);
         const userJson = await userResponse.json();
         let userData = userJson as {user: {current_study_group_id: string}};
@@ -116,6 +116,13 @@ export namespace Backend {
             return group;
         }
         return null;
+    }
+
+    export async function GetGroupInfo(id: string) : Promise<StudyGroup | null> {
+        const groupResponse = await fetch(GetApi() + '/study-groups/' + id);
+        const groupJson = await groupResponse.json();
+        let group = ParseGroup(groupJson);
+        return group;
     }
 
     export async function FetchGroups() : Promise<StudyGroup[] | null> {
@@ -174,7 +181,7 @@ export namespace Backend {
     }
 
     export async function LeaveGroup(user: User, group: StudyGroup) : Promise<boolean>{
-        let url:string = GetApi() + '/study-groups/ ' + group.id + '/members/' + user.id
+        let url:string = GetApi() + '/study-groups/' + group.id + '/members/' + user.id
         let result = await del(url);
         if (result.status == 200){
             return true;

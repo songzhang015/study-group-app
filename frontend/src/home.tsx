@@ -28,6 +28,7 @@ export default function Home() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newGroupSubject, setNewGroupSubject] = useState("");
   const [newGroupMaxMembers, setNewGroupMaxMembers] = useState(5);
+  const [joinGroup, setJoinGroup] = useState(false);
 
   const reactLocation = useLocation();
   const data = reactLocation.state;
@@ -51,7 +52,7 @@ export default function Home() {
 
   async function FetchCurrentGroup(){
     if(user != null){
-      let userGroup = await Backend.GetGroup(user);
+      let userGroup = await Backend.GetUserGroup(user);
       setCurrentGroup(userGroup);
       if(userGroup != null){
         console.log("user group: "+userGroup.subject);
@@ -64,6 +65,7 @@ export default function Home() {
 
   async function CreateAndJoinGroup(subject: string, max_members: number){
     if(user != null && latitude != null && longitude != null){
+      console.log("creating group: " + subject);
       let newGroup = await Backend.CreateGroup(user, subject, max_members, latitude, longitude);
       if(newGroup != null){
         setCurrentGroup(newGroup);
@@ -75,14 +77,30 @@ export default function Home() {
 
   async function JoinSelectedGroup(){
     if(user != null && selectedGroup != null){
-      await Backend.JoinGroup(user, selectedGroup);
+      if(await Backend.JoinGroup(user, selectedGroup)){
+        let updatedGroup = await Backend.GetGroupInfo(selectedGroup.id);
+        setSelectedGroup(updatedGroup);
+        setCurrentGroup(updatedGroup);
+        console.log("joined group: "+updatedGroup?.subject);
+      }
     }
   }
   async function LeaveCurrentGroup(){
     if(user != null && currentGroup != null){
-      await Backend.LeaveGroup(user, currentGroup);
+      if(await Backend.LeaveGroup(user, currentGroup)){
+        setCurrentGroup(null);
+      }
     }
   }
+
+  useEffect(() => {
+    if(joinGroup){
+      (async () => {
+        await JoinSelectedGroup();
+        setJoinGroup(false);
+      })();
+    }
+  }, [joinGroup])
 
   useEffect(() => {
     FetchCurrentGroup();
@@ -123,14 +141,27 @@ export default function Home() {
     <div className="main-split-container">
       <div className="left-section">
         <div className="text">Username: {user?.name}</div>
-        <div className="findButtonTextContainer">
+        {currentGroup ? (
+          <div className = "inGroupContainer">
+            <div className = "text">Current study group: {currentGroup.subject}</div>
+            <div className = "text">Members: {currentGroup.member_count} / {currentGroup.max_member_count}</div>
+            <div className = "text">Location: {currentGroup.location.latitude}, {currentGroup.location.longitude}</div>
+            <button className="button" onClick={async () => {
+              await LeaveCurrentGroup();
+            }}>
+              Leave group
+            </button>
+          </div>) : (
+            <><div className="findButtonTextContainer">
           <select
             id="groupDropdown"
             className="groupDropdown"
             value={selectedGroup?.subject || ""}
-            onChange={e => {
+            onChange={async e => {
               const group = groups?.find(g => g.subject === e.target.value);
+              console.log("selected group: " + group?.subject);
               setSelectedGroup(group || null);
+              setJoinGroup(true);
             }}
           >
             <option value="" disabled>
@@ -144,51 +175,50 @@ export default function Home() {
           </select>
         </div>
         <div className="createButtonTextContainer">
-          {!showCreateForm ? (
-            <button className="button" onClick={() => setShowCreateForm(true)}>
-              Create Your Own Group
-            </button>
-          ) : (
-            <form
-              className="createGroupForm"
-              onSubmit={async e => {
-                e.preventDefault();
-                await CreateAndJoinGroup(newGroupSubject, newGroupMaxMembers);
-                setShowCreateForm(false);
-                setNewGroupSubject("");
-                setNewGroupMaxMembers(5);
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Group Subject"
-                value={newGroupSubject}
-                onChange={e => setNewGroupSubject(e.target.value)}
-                required
-                className="groupInput"
-              />
-              <input
-                type="number"
-                min={2}
-                max={20}
-                placeholder="Max Members"
-                value={newGroupMaxMembers}
-                onChange={e => setNewGroupMaxMembers(Number(e.target.value))}
-                required
-                className="groupInput"
-              />
-              <div className="buttonRow">
-                <button className="button" type="submit">Create</button>
-                <button className="button" type="button" onClick={() => setShowCreateForm(false)}>
-                  Cancel
+              {!showCreateForm ? (
+                <button className="button" onClick={() => setShowCreateForm(true)}>
+                  Create Your Own Group
                 </button>
-              </div>
-            </form>
-          )}
-        </div>
-        <div className="logoutButtonContainer">
-          <button className="button" onClick={() => window.location.href = '/'}>Logout</button>
-        </div>
+              ) : (
+                <form
+                  className="createGroupForm"
+                  onSubmit={async (e) => {
+                    console.log("create group button");
+                    e.preventDefault();
+                    await CreateAndJoinGroup(newGroupSubject, newGroupMaxMembers);
+                    setShowCreateForm(false);
+                    setNewGroupSubject("");
+                    setNewGroupMaxMembers(5);
+                  } }
+                >
+                  <input
+                    type="text"
+                    placeholder="Group Subject"
+                    value={newGroupSubject}
+                    onChange={e => setNewGroupSubject(e.target.value)}
+                    required
+                    className="groupInput" />
+                  <input
+                    type="number"
+                    min={2}
+                    max={20}
+                    placeholder="Max Members"
+                    value={newGroupMaxMembers}
+                    onChange={e => setNewGroupMaxMembers(Number(e.target.value))}
+                    required
+                    className="groupInput" />
+                  <div className="buttonRow">
+                    <button className="button" type="submit">Create</button>
+                    <button className="button" type="button" onClick={() => setShowCreateForm(false)}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div><div className="logoutButtonContainer">
+                <button className="button" onClick={() => window.location.href = '/'}>Logout</button>
+              </div></>
+        )}
       </div>
       <div className="right-section">
         {latitude !== null && longitude !== null && (
