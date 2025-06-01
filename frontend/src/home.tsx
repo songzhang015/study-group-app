@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate, useLocation } from "react-router";
 import { User, Backend, StudyGroup } from './backend';
 import './home.css';
@@ -92,6 +92,7 @@ export default function Home() {
     if(user != null && currentGroup != null){
       if(await Backend.LeaveGroup(user, currentGroup)){
         setCurrentGroup(null);
+        setSelectedGroup(null);
       }
     }
   }
@@ -267,6 +268,16 @@ export default function Home() {
                 <Marker position={[latitude, longitude]}>
                   <Popup>You are here</Popup>
                 </Marker>
+                {selectedGroup && (
+                  <Marker position={[
+                    selectedGroup.location.latitude,
+                    selectedGroup.location.longitude
+                  ]}>
+                    <Popup>
+                      {selectedGroup.subject}
+                    </Popup>
+                  </Marker>
+                )}
               </MapContainer>
             </div>
           </>
