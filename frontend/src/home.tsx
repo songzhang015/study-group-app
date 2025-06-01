@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate, useLocation } from "react-router";
 import { User, Backend, StudyGroup } from './backend';
 import './home.css';
@@ -29,6 +29,8 @@ export default function Home() {
   const [newGroupSubject, setNewGroupSubject] = useState("");
   const [newGroupMaxMembers, setNewGroupMaxMembers] = useState(5);
   const [joinGroup, setJoinGroup] = useState(false);
+
+  const [address, setAddress] = useState<string>("");
 
   const reactLocation = useLocation();
   const data = reactLocation.state;
@@ -85,11 +87,29 @@ export default function Home() {
       }
     }
   }
+  
   async function LeaveCurrentGroup(){
     if(user != null && currentGroup != null){
       if(await Backend.LeaveGroup(user, currentGroup)){
         setCurrentGroup(null);
+        setSelectedGroup(null);
       }
+    }
+  }
+
+  async function getAddressFromCoords(lat: number, lon: number): Promise<string> {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+    );
+    const data = await response.json();
+    const houseNumber = data.address?.house_number || "";
+    const road = data.address?.road || "";
+    if (houseNumber && road) {
+      return `${houseNumber} ${road}`;
+    } else if (road) {
+      return road;
+    } else {
+      return "Unknown location";
     }
   }
 
@@ -137,15 +157,26 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (currentGroup) {
+      getAddressFromCoords(
+        currentGroup.location.latitude,
+        currentGroup.location.longitude
+      ).then(setAddress);
+    }
+  }, [currentGroup]);
+
   return (
     <div className="main-split-container">
       <div className="left-section">
-        <div className="text">Username: {user?.name}</div>
+        <div className="text">User: {user?.name}</div>
         {currentGroup ? (
           <div className = "inGroupContainer">
-            <div className = "text">Current study group: {currentGroup.subject}</div>
+            <div className = "text">Current Study Group: {currentGroup.subject}</div>
             <div className = "text">Members: {currentGroup.member_count} / {currentGroup.max_member_count}</div>
-            <div className = "text">Location: {currentGroup.location.latitude}, {currentGroup.location.longitude}</div>
+            <div className="text">
+              {address && <span>Location: {address}</span>}
+            </div>
             <button className="button" onClick={async () => {
               await LeaveCurrentGroup();
               await FetchGroups();
@@ -224,11 +255,7 @@ export default function Home() {
       <div className="right-section">
         {latitude !== null && longitude !== null && (
           <>
-            <div className="overlay-coordinates">
-              Latitude: {latitude.toFixed(5)} <br />
-              Longitude: {longitude.toFixed(5)}
-            </div>
-            <div style={{ height: '400px', width: '100%', maxWidth: 600 }}>
+            <div style={{ height: '100%', width: '100%'}}>
               <MapContainer
                 center={[latitude, longitude]}
                 zoom={15}
@@ -241,6 +268,16 @@ export default function Home() {
                 <Marker position={[latitude, longitude]}>
                   <Popup>You are here</Popup>
                 </Marker>
+                {selectedGroup && (
+                  <Marker position={[
+                    selectedGroup.location.latitude,
+                    selectedGroup.location.longitude
+                  ]}>
+                    <Popup>
+                      {selectedGroup.subject}
+                    </Popup>
+                  </Marker>
+                )}
                 {(!currentGroup && groups) && groups.map(group => (
                     <Marker position={[group.location.latitude, group.location.longitude]}>
                       <Popup>{group.subject}</Popup>
