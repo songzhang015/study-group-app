@@ -33,7 +33,7 @@ body {
 
 .findButtonTextContainer {
   margin-top: 48px;
-  margin-bottom: 24px;
+  margin-bottom: 48px;
 }
 
 .logoutButtonContainer {
@@ -48,7 +48,6 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  margin-bottom: 16px;
 }
 
 .coordinateTextContainer {
@@ -75,4 +74,49 @@ body {
   border-radius: 12px;
   font-size: 24px;
   text-align: center;
+}
+
+.groupDropdown {
+  width: 100%;
+  max-width: 360px;
+  padding: 16px 24px;
+  font-size: 1.4rem;
+  border-radius: 8px;
+  border: 1.5px solid #888;
+  background: #23262b;
+  color: #fff;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.groupDropdown:focus {
+  border: 1.5px solid #4fa3ff;
+  background: #23262b;
+}
+
+.groupDropdown option {
+  background: #23262b;
+  color: #fff;
+}
+
+.createGroupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.groupInput {
+  padding: 10px;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  border: 1px solid #888;
+}
+
+.buttonRow {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
 }

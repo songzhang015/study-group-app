@@ -25,6 +25,10 @@ export default function Home() {
   //TODO: UI buttons should change selected group
   const [selectedGroup, setSelectedGroup] = useState<StudyGroup | null>(null);
 
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newGroupSubject, setNewGroupSubject] = useState("");
+  const [newGroupMaxMembers, setNewGroupMaxMembers] = useState(5);
+
   const reactLocation = useLocation();
   const data = reactLocation.state;
 
@@ -120,10 +124,67 @@ export default function Home() {
       <div className="left-section">
         <div className="text">Username: {user?.name}</div>
         <div className="findButtonTextContainer">
-          <button className="button">Find Nearby Study Groups</button>
+          <select
+            id="groupDropdown"
+            className="groupDropdown"
+            value={selectedGroup?.subject || ""}
+            onChange={e => {
+              const group = groups?.find(g => g.subject === e.target.value);
+              setSelectedGroup(group || null);
+            }}
+          >
+            <option value="" disabled>
+              Find Nearby Study Groups
+            </option>
+            {groups && groups.map(group => (
+              <option key={group.subject} value={group.subject}>
+                {group.subject} ({group.member_count}/{group.max_member_count})
+              </option>
+            ))}
+          </select>
         </div>
         <div className="createButtonTextContainer">
-          <button className="button">Create Your Own Group</button>
+          {!showCreateForm ? (
+            <button className="button" onClick={() => setShowCreateForm(true)}>
+              Create Your Own Group
+            </button>
+          ) : (
+            <form
+              className="createGroupForm"
+              onSubmit={async e => {
+                e.preventDefault();
+                await CreateAndJoinGroup(newGroupSubject, newGroupMaxMembers);
+                setShowCreateForm(false);
+                setNewGroupSubject("");
+                setNewGroupMaxMembers(5);
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Group Subject"
+                value={newGroupSubject}
+                onChange={e => setNewGroupSubject(e.target.value)}
+                required
+                className="groupInput"
+              />
+              <input
+                type="number"
+                min={2}
+                max={20}
+                placeholder="Max Members"
+                value={newGroupMaxMembers}
+                onChange={e => setNewGroupMaxMembers(Number(e.target.value))}
+                required
+                className="groupInput"
+              />
+              <div className="buttonRow">
+                <button className="button" type="submit">Create</button>
+                <button className="button" type="button" onClick={() => setShowCreateForm(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
         </div>
         <div className="logoutButtonContainer">
           <button className="button" onClick={() => window.location.href = '/'}>Logout</button>

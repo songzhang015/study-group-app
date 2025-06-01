@@ -1,5 +1,5 @@
 
-const api = "http://localhost:5000";
+const api = "http://localhost:5050";
 
 export type User = {
     id : string,

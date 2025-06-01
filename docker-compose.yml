@@ -14,7 +14,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "5050:5000"
     environment:
       db: mongodb://mongodb:27017/studygroupapp
     depends_on:
