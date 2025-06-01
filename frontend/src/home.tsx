@@ -278,7 +278,7 @@ export default function Home() {
                     </Popup>
                   </Marker>
                 )}
-                {(!currentGroup && groups) && groups.map(group => (
+                {(!selectedGroup && groups) && groups.map(group => (
                     <Marker position={[group.location.latitude, group.location.longitude]}>
                       <Popup>{group.subject}</Popup>
                     </Marker>
