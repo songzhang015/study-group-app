@@ -254,11 +254,7 @@ export default function Home() {
       <div className="right-section">
         {latitude !== null && longitude !== null && (
           <>
-            <div className="overlay-coordinates">
-              Latitude: {latitude.toFixed(5)} <br />
-              Longitude: {longitude.toFixed(5)}
-            </div>
-            <div style={{ height: '400px', width: '100%', maxWidth: 600 }}>
+            <div style={{ height: '100%', width: '100%'}}>
               <MapContainer
                 center={[latitude, longitude]}
                 zoom={15}
