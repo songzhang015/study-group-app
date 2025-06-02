@@ -8,10 +8,35 @@ import 'leaflet/dist/leaflet.css';
 
 // The map pin icon image retrieval:
 delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+export const userIcon   = new L.Icon({
+  iconUrl:        "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl:  "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl:      "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize:       [25, 41],
+  iconAnchor:     [12, 41],
+  popupAnchor:    [1, -34],
+  shadowSize:     [41, 41],
+});
+
+/* green versions come from the leaflet-color-markers repo */
+export const greenIcon = new L.Icon({
+  iconUrl:        "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+  iconRetinaUrl:  "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl:      "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize:       [25, 41],
+  iconAnchor:     [12, 41],
+  popupAnchor:    [1, -34],
+  shadowSize:     [41, 41],
+});
+
+export const greyIcon = new L.Icon({
+  iconUrl:        "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png",
+  iconRetinaUrl:  "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png",
+  shadowUrl:      "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize:       [25, 41],
+  iconAnchor:     [12, 41],
+  popupAnchor:    [1, -34],
+  shadowSize:     [41, 41],
 });
 
 
@@ -259,27 +284,29 @@ export default function Home() {
               <MapContainer
                 center={[latitude, longitude]}
                 zoom={15}
-                style={{ height: '100%', width: '100%' }}
-              >
+                style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={[latitude, longitude]}>
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'/>
+
+                <Marker 
+                  position={[latitude, longitude]} 
+                  icon={userIcon}>
                   <Popup>You are here</Popup>
                 </Marker>
+
                 {selectedGroup && (
-                  <Marker position={[
-                    selectedGroup.location.latitude,
-                    selectedGroup.location.longitude
-                  ]}>
-                    <Popup>
-                      {selectedGroup.subject}
-                    </Popup>
+                  <Marker
+                    position={[selectedGroup.location.latitude, selectedGroup.location.longitude]}
+                    icon={greenIcon}>
+                    <Popup> {selectedGroup.subject} </Popup>
                   </Marker>
                 )}
+
                 {(!selectedGroup && groups) && groups.map(group => (
-                    <Marker position={[group.location.latitude, group.location.longitude]}>
+                    <Marker 
+                      position={[group.location.latitude, group.location.longitude]} 
+                      icon={greyIcon}>
                       <Popup>{group.subject}</Popup>
                     </Marker>
                   ))
