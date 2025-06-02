@@ -1,3 +1,14 @@
+/*
+The Backend Interactions for CS 422 Project 2: Study Group App
+
+This file contains all the typescript code that interacts with the backend
+
+This allows the networking details to be abstracted away in the code 
+for the menu screens.
+
+Authors: Sawyer Christensen, Kaleo Montero
+Last Modified: 06/01/2025
+*/
 
 const api = "http://localhost:5050";
 

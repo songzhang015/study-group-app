@@ -1,3 +1,14 @@
+/*
+The Home Screen for CS 422 Project 2: Study Group App
+
+This file contains the code for the home screen menu.
+
+This menu handles displaying the map and study group choices, 
+as well as the currently selected study gorup.
+
+Authors: Sawyer Christensen, Kaleo Montero
+Last Modified: 06/01/2025
+*/
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useNavigate, useLocation } from "react-router";

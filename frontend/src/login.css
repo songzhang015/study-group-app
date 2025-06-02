@@ -1,3 +1,11 @@
+/*
+The Login Screen stylesheet for CS 422 Project 2: Study Group App
+
+This file contains the stylesheet used by the login screen.
+
+Authors: Sawyer Christensen, Kaleo Montero
+Last Modified: 05/27/2025
+*/
 .container {
   min-height: 100vh;
   display: flex;

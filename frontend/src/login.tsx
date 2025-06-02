@@ -1,3 +1,15 @@
+/*
+The Login Screen for CS 422 Project 2: Study Group App
+
+This file contains the code for the login screen menu.
+
+This menu handles displaying the user options for logging in
+to the app. It also handles the login process which transitions
+to the home screen.
+
+Authors: Sawyer Christensen, Kaleo Montero
+Last Modified: 05/30/2025
+*/
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { User, Backend } from './backend';
