@@ -90,10 +90,15 @@ export namespace Backend {
             const response = await post_json(GetApi() + '/login', {
                 user_selection: username
             });
-            const responseJson = await response.json();
-            const responseUser = responseJson as BackendUser;
-            const user = {name: username, id: responseUser.user_id} as User;
-            return user;
+            if(response.ok){
+                const responseJson = await response.json();
+                const responseUser = responseJson as BackendUser;
+                const user = {name: username, id: responseUser.user_id} as User;
+                return user;
+            }
+            else{
+                return null;
+            }
         }
         catch (e){
             const err = e as Error;
