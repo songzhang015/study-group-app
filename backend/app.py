@@ -8,18 +8,18 @@ with our database (MongoDB) by sending and receiving requests to and from
 the server.
 
 Authors: Derek Van Devender, Song Zhang
-Last Modified: 05/27/2025
+Last Modified: 06/04/2025
 """
 
 import os
 from flask import Flask, jsonify, request
-from flask_cors import CORS # Might have to "pip install flask-cors" to use this
+from flask_cors import CORS
 from mongoengine import connect, DoesNotExist, PointField
 from db_models import User, StudyGroup
 from seeder import seed_db
 
 app = Flask(__name__)
-CORS(app)  # This allows your frontend to access the backend or I think helps the Expo Go and Browser to connect
+CORS(app)
 
 # Connect to MongoDB
 db = os.getenv('db', 'mongodb://localhost:27017/studygroupapp')
